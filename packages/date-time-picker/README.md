@@ -19,3 +19,9 @@ Values remain in draft until complete and valid. Explicit Apply and Cancel are a
 The generated package contains dist, README and LICENSE, without sourcemaps. Vanilla has readable and minified standalone browser files. Each standalone browser bundle includes its dependencies and needs no additional Salyra script.
 
 The workspace contains versioned API documentation, framework examples, tests and architecture notes.
+
+## Vanilla browser assets
+
+The archive includes readable and minified standalone browser scripts at `dist/browser/date-time-picker.js` and `dist/browser/date-time-picker.min.js`. Each script includes its required Calendar core. Styles are available at `dist/styles.css` and `dist/styles.min.css`, without sourcemaps. Both JavaScript builds expose the same `SalyraDateTimePicker` global.
+
+For a bundled application, import `@salyra-ui/date-time-picker/vanilla` and, when using the default appearance, `@salyra-ui/date-time-picker/styles.min.css`. The `styles.standard.css` entry gives you the readable stylesheet. Custom compositions can omit these default styles.

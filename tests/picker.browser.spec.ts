@@ -491,3 +491,100 @@ test("date and time popups fit a phone viewport without native date or time inpu
     await page.keyboard.press("Escape");
   }
 });
+
+test("every working example has independent Preview and Code tabs with its real files", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const examples = [
+    ["picker", "interval-picker.ts", "mountIntervalPicker"],
+    ["historical", "historical-calendar.ts", "mountHistoricalCalendar"],
+    ["events", "event-calendar.ts", "mountEventCalendar"],
+    ["scrolling", "scrolling-calendar.ts", "mountScrollingCalendar"],
+  ];
+  for (const [id, file, entry] of examples) {
+    const section = page.locator(`#${id}`);
+    await section.getByRole("tab", { name: "Code", exact: true }).click();
+    await expect(section.locator(".example-preview")).toBeHidden();
+    await expect(section.locator(".example-source")).toContainText(entry);
+    await section.getByRole("tab", { name: file, exact: true }).click();
+    await expect(section.locator(".example-source")).toContainText(
+      `export function ${entry}`,
+    );
+    await section
+      .getByRole("tab", { name: "demo-styles.css", exact: true })
+      .click();
+    await expect(section.locator(".example-source")).toContainText(
+      ".example-preview",
+    );
+    await section.getByRole("tab", { name: "Preview", exact: true }).click();
+    await expect(section.locator(".example-preview")).toBeVisible();
+    await expect(page.locator(".example-code:visible")).toHaveCount(0);
+  }
+});
+
+test("preview selections survive code navigation and source copy/download follows the selected file", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/");
+  const section = page.locator("#picker");
+  await chooseDate(section, "start", "2026-10-09");
+  const draft = await page.locator("#draft").textContent();
+  await section.getByRole("tab", { name: "Code", exact: true }).click();
+  await section
+    .getByRole("tab", { name: "picker-controls.ts", exact: true })
+    .click();
+  await section.getByRole("button", { name: "Copy code", exact: true }).click();
+  await expect(section.getByRole("status")).toContainText(
+    "picker-controls.ts copied.",
+  );
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toContain("export function mountEndpointPickers");
+  const pending = page.waitForEvent("download");
+  await section
+    .getByRole("button", { name: "Download file", exact: true })
+    .click();
+  const download = await pending;
+  expect(download.suggestedFilename()).toBe("picker-controls.ts");
+  expect(await readFile((await download.path())!, "utf8")).toBe(copied);
+  await section.getByRole("tab", { name: "Preview", exact: true }).click();
+  await expect(page.locator("#draft")).toHaveText(draft!);
+  await expect(
+    section.locator(
+      '[data-choice-picker="date"][data-endpoint="start"] .picker-control-trigger',
+    ),
+  ).toHaveAttribute("data-value", "2026-10-09");
+  await expect(
+    section.getByRole("tab", { name: "Preview", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
+});
+
+test("example view and file tabs support arrow navigation on a narrow viewport", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const section = page.locator("#events");
+  await section.getByRole("tab", { name: "Preview", exact: true }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(
+    section.getByRole("tab", { name: "Code", exact: true }),
+  ).toBeFocused();
+  const first = section.getByRole("tab", { name: "example.ts", exact: true });
+  await first.focus();
+  await page.keyboard.press("End");
+  await expect(
+    section.getByRole("tab", { name: "picker-controls.css", exact: true }),
+  ).toBeFocused();
+  await expect(section.locator(".example-source")).toContainText(
+    ".endpoint-popup",
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await expect(page.locator("#historical .example-preview")).toBeVisible();
+});

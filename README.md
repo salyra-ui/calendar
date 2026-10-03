@@ -2,6 +2,8 @@
 
 Four separately installable npm packages in one development workspace. Preview 0.1.0, not published yet.
 
+[Salyra UI documentation](https://salyra-ui.github.io/docs/) covers Calendar, Date Picker, Time Picker and Date Time Picker alongside Color Picker and Theme Studio. Its source lives in the separate [documentation repository](https://github.com/salyra-ui/docs).
+
 | Package                     | Purpose                                                | Dependencies                       |
 | --------------------------- | ------------------------------------------------------ | ---------------------------------- |
 | @salyra-ui/calendar         | Gregorian calendar, shared store and native primitives | None                               |
@@ -16,6 +18,8 @@ Every package has React, Svelte, Vue, Angular, Astro and Vanilla entries. Import
 Use Node 22.19 or newer. The verified installation uses Node 24 and npm 11. Run `npm install`, then `npm run check`, `npm test`, `npm run check:frameworks`, `npm run test:ssr` and `npm run build`. The build creates four downloads used by the browser tests. Continue with `npm run verify:package`, `npm run test:browser`, `npm run bench`, `npm run build:site` and `npm run build:astro`.
 
 `npm run dev` serves the examples at http://127.0.0.1:4330 and documentation at /docs.html. `npm run dev:astro` serves Astro examples at http://127.0.0.1:4331.
+
+Each working example has independent Preview and Code tabs. Code shows the actual example module, its setup and styles, with copy and file download controls. Switching tabs preserves the current selection and event draft.
 
 The current toolchain verifies React 18, Svelte 5, Vue 3.5, Angular 20 and Astro 7. See [VALIDATION.md](VALIDATION.md) for coverage and remaining validation.
 
@@ -40,6 +44,8 @@ import "@salyra-ui/date-picker/styles.css";
 Source workspace packages are private. Publish only the built directories under release, in dependency order: calendar, date-picker and time-picker, then date-time-picker. This prevents publishing raw workspace files.
 
 Default styles are optional and shared. Import one stylesheet when combining packages. Vanilla has readable and minified standalone browser assets, which include their required core. Framework runtime entries are minified. Svelte and Astro use compact compiler inputs. Archives contain dist, README and LICENSE with no sourcemaps.
+
+The build also writes individual Vanilla assets under `public/downloads/<package>/`: `<package>.js`, `<package>.min.js`, `styles.css` and `styles.min.css`. The browser globals are `SalyraCalendar`, `SalyraDatePicker`, `SalyraTimePicker` and `SalyraDateTimePicker`.
 
 ## Composition and values
 

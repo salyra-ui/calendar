@@ -195,6 +195,12 @@ for (const slug of slugs) {
   )
     throw new Error(`Unexpected ${slug} archive content`);
   await cp(`${root}/${packed.filename}`, `public/downloads/${packed.filename}`);
+  const download = `public/downloads/${slug}`;
+  await mkdir(download, { recursive: true });
+  for (const name of [`${slug}.js`, `${slug}.min.js`])
+    await cp(`${root}/dist/browser/${name}`, `${download}/${name}`);
+  for (const name of ["styles.css", "styles.min.css"])
+    await cp(`${root}/dist/${name}`, `${download}/${name}`);
   console.log(
     `Built ${packed.filename}: ${packed.entryCount} files, ${packed.size} bytes, no sourcemaps`,
   );

@@ -8,7 +8,7 @@ Verified locally on 4 October 2026 with Node 24.19.0. The dependency install use
 | ------------------------------------------------- | ----------------------------------------------------------------------- |
 | Strict TypeScript                                 | Passed                                                                  |
 | Unit tests                                        | 27 passed                                                               |
-| Chromium browser tests                            | 31 passed                                                               |
+| Chromium browser tests                            | 34 passed                                                               |
 | Svelte client and server compilation              | Passed, with no Svelte diagnostics                                      |
 | Angular partial compilation                       | Passed                                                                  |
 | Astro component compilation and static site build | Passed                                                                  |

@@ -10,6 +10,9 @@
 - Updated the event example to create and edit multi-day date-time intervals.
 - Replaced bare date/time fields in the interval and event demos with button-triggered DatePicker calendars and TimePicker clock columns. Added downloadable example controls and styles.
 
+- Added independent Preview/Code tabs, copy and file downloads to every working example.
+- Added individual standard/minified Vanilla JavaScript and CSS downloads and installation examples.
+
 This version is available as a local archive. It has not been published to npm.
 
 - Gregorian calendar calculations for years 1–9999, with configurable week starts and outside days.
