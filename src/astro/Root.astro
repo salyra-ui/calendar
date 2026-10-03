@@ -1,0 +1,54 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { PickerOptions } from "../core";
+interface Props extends HTMLAttributes<"div"> {
+  options: Omit<
+    PickerOptions,
+    | "isDateUnavailable"
+    | "isTimeUnavailable"
+    | "isRangeUnavailable"
+    | "onValueChange"
+    | "onSelect"
+  >;
+  class?: string;
+}
+const { options, ...attributes } = Astro.props;
+---
+
+<sp-picker
+  {...attributes}
+  data-picker-root
+  data-config={JSON.stringify(options)}
+  aria-busy="true"
+>
+  <fieldset disabled data-picker-pending style="display: contents">
+    <slot />
+  </fieldset>
+</sp-picker>
+<script>
+  import { mountPicker } from "../vanilla";
+  class PickerElement extends HTMLElement {
+    cleanup?: () => void;
+    connectedCallback() {
+      queueMicrotask(() => {
+        if (!this.isConnected || this.cleanup) return;
+        const mounted = mountPicker(
+          this,
+          JSON.parse(this.dataset.config ?? "{}"),
+        );
+        this.cleanup = mounted.destroy;
+        const pending = this.querySelector<HTMLFieldSetElement>(
+          "fieldset[data-picker-pending]",
+        );
+        if (pending) pending.disabled = false;
+        this.setAttribute("aria-busy", "false");
+      });
+    }
+    disconnectedCallback() {
+      this.cleanup?.();
+      this.cleanup = undefined;
+    }
+  }
+  if (!customElements.get("sp-picker"))
+    customElements.define("sp-picker", PickerElement);
+</script>

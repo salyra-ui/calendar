@@ -1,0 +1,28 @@
+---
+import Root from "../../../../src/astro/Root.astro";
+import Calendar from "../../../../src/astro/Calendar.astro";
+const outer = {
+  referenceDate: "2010-03-01",
+  month: { year: 2010, month: 3 },
+} as const;
+const inner = {
+  referenceDate: "2026-10-03",
+  month: { year: 2026, month: 10 },
+} as const;
+---
+
+<html lang="en">
+  <head>
+    <title>Nested calendars</title>
+  </head>
+  <body>
+    <Root id="outer" options={outer}>
+      <Calendar options={outer} />
+      <output id="outer-value" data-picker-output></output>
+      <Root id="inner" options={inner}>
+        <Calendar options={inner} />
+        <output id="inner-value" data-picker-output></output>
+      </Root>
+    </Root>
+  </body>
+</html>

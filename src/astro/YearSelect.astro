@@ -1,0 +1,13 @@
+---
+const { year = 2026, from = 1900, to = 2100, ...attributes } = Astro.props;
+---
+
+<select {...attributes} data-year-select>
+  <slot>
+    {Array.from({ length: to - from + 1 }, (_, i) => (
+      <option value={from + i} selected={from + i === year}>
+        {from + i}
+      </option>
+    ))}
+  </slot>
+</select>

@@ -1,0 +1,8 @@
+---
+import Root from "./Root.astro";
+const { options = {}, ...attributes } = Astro.props;
+---
+
+<Root {...attributes} options={{ ...options, kind: "datetime" }}>
+  <slot />
+</Root>

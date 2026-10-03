@@ -1,0 +1,113 @@
+:where(.sp-calendar) {
+  --sp-accent: #e4002b;
+  --sp-selected-text: #fff;
+  --sp-range: #fce5ea;
+  --sp-outside: #737373;
+  --sp-border: #dddde2;
+  color: #181818;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.sp-calendar {
+  display: grid;
+  grid-template-columns: repeat(var(--sp-months, 1), minmax(0, 1fr));
+  gap: 24px;
+}
+.sp-month {
+  min-width: 0;
+}
+.sp-month h3 {
+  margin: 0 0 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.sp-grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.sp-grid th {
+  height: 32px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #656565;
+  text-align: center;
+}
+.sp-grid td {
+  padding: 2px 0;
+  position: relative;
+  height: 40px;
+  text-align: center;
+}
+.sp-grid [data-day-trigger] {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: var(--sp-day-radius, 4px);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.sp-grid [data-day-trigger]:hover {
+  border-color: var(--sp-border);
+}
+.sp-grid [data-part="cell"][data-in-range] {
+  background: var(--sp-range);
+}
+.sp-grid [data-part="cell"][data-selected] [data-day-trigger] {
+  background: var(--sp-accent);
+  color: var(--sp-selected-text);
+}
+.sp-grid [data-part="cell"][data-outside]:not([data-selected]) {
+  color: var(--sp-outside);
+}
+.sp-grid
+  [data-part="cell"][data-today]:not([data-selected])
+  [data-part="number"] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.sp-grid [data-day-trigger]:focus-visible {
+  outline: 2px solid var(--sp-accent);
+  outline-offset: 2px;
+}
+.sp-grid [data-day-trigger]:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.sp-time {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sp-time label {
+  display: grid;
+  gap: 8px;
+  font: inherit;
+  font-size: 12px;
+}
+.sp-time input,
+.sp-time select {
+  width: 72px;
+  min-height: 40px;
+  border: 1px solid #dddde2;
+  padding: 8px;
+  box-sizing: border-box;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.sp-time [aria-invalid="true"] {
+  outline: 2px solid #e4002b;
+}
+@media (max-width: 640px) {
+  .sp-calendar {
+    grid-template-columns: 1fr;
+  }
+}

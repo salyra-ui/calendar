@@ -1,0 +1,23 @@
+---
+import { createPickerStore, dayAttributes, type PickerOptions } from "../core";
+import type { HTMLAttributes } from "astro/types";
+interface Props extends HTMLAttributes<"div"> {
+  date: string;
+  outside?: boolean;
+  options?: PickerOptions;
+}
+const { date, outside = false, options = {}, ...attributes } = Astro.props;
+const store = createPickerStore(options);
+const state = dayAttributes(store, date, outside);
+store.destroy();
+---
+
+<div
+  {...attributes}
+  {...state}
+  role="gridcell"
+  data-part="cell"
+  data-calendar-cell
+>
+  <slot />
+</div>

@@ -1,0 +1,13 @@
+---
+const { month = 1, ...attributes } = Astro.props;
+---
+
+<select {...attributes} data-month-select>
+  <slot>
+    {Array.from({ length: 12 }, (_, i) => (
+      <option value={i + 1} selected={i + 1 === month}>
+        {i + 1}
+      </option>
+    ))}
+  </slot>
+</select>

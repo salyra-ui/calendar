@@ -1,0 +1,24 @@
+---
+import {
+  createPickerStore,
+  monthScrollerMarkup,
+  type PickerOptions,
+  type MonthScrollerOptions,
+} from "../core";
+interface Props {
+  options?: MonthScrollerOptions;
+  pickerOptions?: PickerOptions;
+  class?: string;
+  style?: string;
+}
+const { options = {}, pickerOptions = {}, ...attributes } = Astro.props;
+const store = createPickerStore(pickerOptions),
+  html = monthScrollerMarkup(store, options);
+store.destroy();
+---
+
+<div
+  {...attributes}
+  data-continuous={JSON.stringify(options)}
+  set:html={html}
+/>

@@ -1,0 +1,7 @@
+---
+const { action, ...attributes } = Astro.props;
+---
+
+<button {...attributes} type="button" data-picker-action={action}>
+  <slot>{action}</slot>
+</button>

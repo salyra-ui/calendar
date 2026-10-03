@@ -1,0 +1,10 @@
+---
+const { endpoint = "start", ...attributes } = Astro.props;
+---
+
+<select {...attributes} data-time-segment="period" data-endpoint={endpoint}>
+  <slot>
+    <option>AM</option>
+    <option>PM</option>
+  </slot>
+</select>

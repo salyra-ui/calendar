@@ -1,0 +1,7 @@
+---
+const { date, ...attributes } = Astro.props;
+---
+
+<span {...attributes} data-part="number">
+  <slot>{Number(date.slice(-2))}</slot>
+</span>

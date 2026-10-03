@@ -1,0 +1,10 @@
+---
+const { part = "hour", endpoint = "start", ...attributes } = Astro.props;
+---
+
+<input
+  {...attributes}
+  type="number"
+  data-time-segment={part}
+  data-endpoint={endpoint}
+/>

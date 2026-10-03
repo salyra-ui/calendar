@@ -1,0 +1,11 @@
+---
+import { calendarMarkup, createPickerStore, type PickerOptions } from "../core";
+interface Props {
+  options: PickerOptions;
+  class?: string;
+}
+const { options, ...attributes } = Astro.props;
+const html = calendarMarkup(createPickerStore(options));
+---
+
+<div {...attributes} data-calendar set:html={html} />

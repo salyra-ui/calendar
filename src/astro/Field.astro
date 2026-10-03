@@ -1,0 +1,11 @@
+---
+const { endpoint = "start", ...attributes } = Astro.props;
+---
+
+<input
+  {...attributes}
+  type="text"
+  placeholder="YYYY-MM-DD"
+  data-date-field
+  data-endpoint={endpoint}
+/>

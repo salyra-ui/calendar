@@ -1,0 +1,23 @@
+---
+import { weekdayLabels, type PickerOptions } from "../core";
+interface Props {
+  day: number;
+  options?: PickerOptions;
+  class?: string;
+}
+const { day, options = {}, ...attributes } = Astro.props;
+const label = weekdayLabels(
+  options.locale ?? "en-GB",
+  options.weekStartsOn ?? 1,
+).find((d) => d.weekday === day)?.label;
+---
+
+<span
+  {...attributes}
+  role="columnheader"
+  data-part="weekday"
+  data-weekday={day}
+  data-weekend={(options.weekend ?? [0, 6]).includes(day)}
+>
+  <slot>{label}</slot>
+</span>

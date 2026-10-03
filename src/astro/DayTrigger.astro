@@ -1,0 +1,7 @@
+---
+const { date, ...attributes } = Astro.props;
+---
+
+<button {...attributes} type="button" data-day-trigger data-date={date}>
+  <slot />
+</button>

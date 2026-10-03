@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "artifacts/types",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/core/**/*.ts",
+    "src/react/**/*.tsx",
+    "src/vue/**/*.ts",
+    "src/vanilla/**/*.ts"
+  ]
+}

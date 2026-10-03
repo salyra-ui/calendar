@@ -1,0 +1,18 @@
+---
+import { createPickerStore, formatMonth, type PickerOptions } from "../core";
+interface Props {
+  options?: PickerOptions;
+  class?: string;
+}
+const { options = {}, ...attributes } = Astro.props;
+const store = createPickerStore(options),
+  title = formatMonth(
+    store.getSnapshot().visibleMonth,
+    store.getSnapshot().options.locale,
+  );
+store.destroy();
+---
+
+<h3 {...attributes} data-month-heading aria-live="polite">
+  <slot>{title}</slot>
+</h3>

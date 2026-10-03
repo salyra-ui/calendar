@@ -1,0 +1,51 @@
+---
+import DateTimePicker from "../../../../src/astro/DateTimePicker.astro";
+import Segment from "../../../../src/astro/Segment.astro";
+import Root from "../../../../src/astro/Root.astro";
+import Calendar from "../../../../src/astro/Calendar.astro";
+import Action from "../../../../src/astro/Action.astro";
+import "../../../../src/styles.css";
+import "../../../site.css";
+const options = {
+  selection: "range",
+  commit: "explicit",
+  referenceDate: "2026-10-03",
+  month: { year: 2010, month: 3 },
+} as const;
+---
+
+<html lang="en">
+  <head>
+    <title>Astro calendar</title>
+  </head>
+  <body>
+    <main style="padding:40px">
+      <h1>Astro</h1>
+      <Root {options}>
+        <Calendar {options} class="sp-calendar" />
+        <Action action="apply">Apply</Action>
+        <output id="value" data-picker-output></output>
+      </Root>
+      <section id="dt-editor">
+        <DateTimePicker
+          options={{
+            commit: "explicit",
+            referenceDate: "2010-03-09",
+            defaultValue: { date: "2010-03-09", time: "09:30" },
+          }}
+        >
+          <label>
+            Hours
+            <Segment part="hour" />
+          </label>
+          <label>
+            Minutes
+            <Segment part="minute" />
+          </label>
+          <Action action="apply">Apply</Action>
+          <output id="dt-value" data-picker-output></output>
+        </DateTimePicker>
+      </section>
+    </main>
+  </body>
+</html>

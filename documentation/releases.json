@@ -1,0 +1,11 @@
+{
+  "current": "0.1.0",
+  "versions": [
+    {
+      "version": "0.1.0",
+      "status": "development",
+      "reference": "0.1.0/reference.md",
+      "changelog": "../CHANGELOG.md"
+    }
+  ]
+}
