@@ -84,32 +84,143 @@ test("datetime on one day can be completed segment by segment", async ({
   await expect(page.locator("#applied")).toContainText("09:00");
   await expect(page.locator("#applied")).toContainText("17:00");
 });
-test("event action, custom weekday label and day selection remain independent", async ({
+test("event editor saves a multi-day date-time interval and reopens it without selecting a day", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.locator('#event-form [name="title"]').fill("Review");
-  await page
-    .locator("#event-form")
-    .getByRole("button", { name: "Add event" })
-    .click();
-  await page
-    .locator("#event-calendar")
-    .getByRole("button", { name: "Review", exact: true })
-    .click();
-  await expect(page.locator("#event-action")).toHaveText(
-    "Opened event: Review",
-  );
+  const editor = page.locator("#event-editor");
   await page
     .locator('#event-calendar [data-day-trigger][data-date="2026-10-09"]')
     .click();
   await expect(page.locator("#event-action")).toHaveText(
-    "Selected day: 2026-10-09",
+    "New event on 2026-10-09",
   );
-  await page.locator("#weekend-label").fill("Free");
   await expect(
-    page.locator('#event-calendar [data-part="weekday"][data-weekend]'),
-  ).toHaveText(["Free", "Free"]);
+    editor.locator('[data-date-field][data-endpoint="start"]'),
+  ).toHaveValue("2026-10-09");
+  await page.locator('#event-form [name="title"]').fill("Review");
+  await editor
+    .locator('[data-date-field][data-endpoint="end"]')
+    .fill("2026-10-11");
+  await editor
+    .getByRole("spinbutton", { name: "start hours", exact: true })
+    .fill("12");
+  await editor
+    .getByRole("spinbutton", { name: "end hours", exact: true })
+    .fill("16");
+  await editor
+    .getByRole("spinbutton", { name: "end minutes", exact: true })
+    .fill("30");
+  await page
+    .locator("#event-form")
+    .getByRole("button", { name: "Add event", exact: true })
+    .click();
+  await expect(page.locator("#event-action")).toHaveText("Added event: Review");
+  await expect(page.locator("#event-calendar [data-event-id]")).toHaveCount(3);
+  const exported = JSON.parse(
+    (await page.locator("#event-export").textContent()) ?? "{}",
+  );
+  expect(exported.start).toEqual({ date: "2026-10-09", time: "12:00" });
+  expect(exported.end).toEqual({ date: "2026-10-11", time: "16:30" });
+  await page
+    .locator(
+      '#event-calendar [data-part="cell"][data-date="2026-10-10"] [data-event-id]',
+    )
+    .click();
+  await expect(page.locator("#event-action")).toHaveText(
+    "Editing event: Review",
+  );
+  await expect(
+    editor.locator('[data-date-field][data-endpoint="end"]'),
+  ).toHaveValue("2026-10-11");
+  await editor
+    .getByRole("spinbutton", { name: "end hours", exact: true })
+    .fill("18");
+  await page
+    .locator("#event-form")
+    .getByRole("button", { name: "Save changes", exact: true })
+    .click();
+  await expect(page.locator("#event-action")).toHaveText(
+    "Updated event: Review",
+  );
+  await expect(page.locator("#event-calendar [data-event-id]")).toHaveCount(3);
+  await expect(
+    page.locator('#event-calendar [aria-selected="true"]'),
+  ).toHaveCount(0);
+});
+test("all weekdays including each weekend have independent names and classes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByText("Weekday names and classes", { exact: true }).click();
+  await page
+    .getByRole("textbox", { name: "Saturday name", exact: true })
+    .fill("Sat off");
+  await page
+    .getByRole("textbox", { name: "Saturday class", exact: true })
+    .fill("weekday-blue");
+  await page
+    .getByRole("textbox", { name: "Sunday name", exact: true })
+    .fill("Sun rest");
+  await page
+    .getByRole("textbox", { name: "Sunday class", exact: true })
+    .fill("weekday-bold");
+  await page
+    .getByRole("textbox", { name: "Monday name", exact: true })
+    .fill("Work");
+  const saturday = page.locator('#event-calendar [data-weekday="6"]'),
+    sunday = page.locator('#event-calendar [data-weekday="0"]');
+  await expect(saturday).toHaveText("Sat off");
+  await expect(saturday).toHaveClass("weekday-blue");
+  await expect(sunday).toHaveText("Sun rest");
+  await expect(sunday).toHaveClass("weekday-bold");
+  await expect(page.locator('#event-calendar [data-weekday="1"]')).toHaveText(
+    "Work",
+  );
+  await page
+    .locator("#event-navigation")
+    .getByRole("button", { name: "Next month", exact: true })
+    .click();
+  await expect(saturday).toHaveText("Sat off");
+  await expect(sunday).toHaveClass("weekday-bold");
+});
+test("invalid event endpoints stay out of the calendar and a midnight end does not occupy its ending day", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const editor = page.locator("#event-editor");
+  await page.locator('#event-form [name="title"]').fill("Night shift");
+  await editor
+    .locator('[data-date-field][data-endpoint="end"]')
+    .fill("2026-10-08");
+  await page
+    .locator("#event-form")
+    .getByRole("button", { name: "Add event", exact: true })
+    .click();
+  await expect(page.locator("#event-calendar [data-event-id]")).toHaveCount(0);
+  await expect(page.locator("#event-error")).not.toBeEmpty();
+  await editor
+    .locator('[data-date-field][data-endpoint="end"]')
+    .fill("2026-10-10");
+  await editor
+    .getByRole("spinbutton", { name: "end hours", exact: true })
+    .fill("0");
+  await editor
+    .getByRole("spinbutton", { name: "end minutes", exact: true })
+    .fill("0");
+  await page
+    .locator("#event-form")
+    .getByRole("button", { name: "Add event", exact: true })
+    .click();
+  await expect(page.locator("#event-action")).toHaveText(
+    "Added event: Night shift",
+  );
+  await expect(page.locator("#event-calendar [data-event-id]")).toHaveCount(1);
+  await expect(
+    page.locator(
+      '#event-calendar [data-part="cell"][data-date="2026-10-10"] [data-event-id]',
+    ),
+  ).toHaveCount(0);
 });
 test("keyboard crosses months and popup Escape returns focus", async ({
   page,

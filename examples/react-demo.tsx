@@ -61,6 +61,32 @@ function App() {
         <Custom />
         <p id="event-result" />
       </Picker.Root>
+      <section id="custom-click">
+        <h2>Your click action</h2>
+        <Calendar.Root
+          referenceDate="2010-03-01"
+          month={{ year: 2010, month: 3 }}
+        >
+          <Calendar.View
+            className="sp-calendar"
+            weekdays={{
+              6: { label: "Saturday off", class: "weekday-red" },
+              0: { label: "Sunday rest", class: "weekday-bold" },
+            }}
+            onClick={(event) => {
+              const day = (event.target as Element).closest<HTMLElement>(
+                "[data-day-trigger]",
+              );
+              if (!day) return;
+              event.preventDefault();
+              document.querySelector("#click-result")!.textContent =
+                `Opened date: ${day.dataset.date}`;
+            }}
+          />
+          <output id="click-result" />
+          <Calendar.Output id="click-value" />
+        </Calendar.Root>
+      </section>
       <section id="dt-editor">
         <DateTimePicker.Root
           referenceDate="2010-03-09"

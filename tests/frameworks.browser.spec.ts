@@ -101,3 +101,39 @@ test("Astro package calendar keeps date-time duration units during SSR", async (
   await expect(cell).toHaveAttribute("data-range-start", "");
   await expect(cell).toHaveAttribute("data-range-end", "");
 });
+
+test("a React calendar lets its native click decide the UI and cancel selection", async ({
+  page,
+}) => {
+  await page.goto("/framework.html?framework=react");
+  const custom = page.locator("#custom-click");
+  await custom.locator('[data-day-trigger][data-date="2010-03-09"]').click();
+  await expect(page.locator("#click-result")).toHaveText(
+    "Opened date: 2010-03-09",
+  );
+  await expect(page.locator("#click-value")).toHaveText("null");
+  await expect(custom.locator('[data-weekday="6"]')).toHaveText("Saturday off");
+  await expect(custom.locator('[data-weekday="0"]')).toHaveClass(
+    "weekday-bold",
+  );
+});
+
+test("Astro keeps independent weekday names and classes from SSR through client mount", async ({
+  page,
+  request,
+}) => {
+  const url = "http://127.0.0.1:4331/";
+  const html = await (await request.get(url)).text();
+  expect(html).toContain("Saturday off");
+  expect(html).toContain('class="saturday"');
+  await page.goto(url);
+  await expect(
+    page.locator("#date-editor [data-day-trigger]").first(),
+  ).toBeEnabled();
+  await expect(page.locator('#date-editor [data-weekday="6"]')).toHaveText(
+    "Saturday off",
+  );
+  await expect(page.locator('#date-editor [data-weekday="0"]')).toHaveClass(
+    "sunday",
+  );
+});

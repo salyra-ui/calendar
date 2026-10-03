@@ -28,7 +28,14 @@ export function attribute(
     if (el.getAttribute(name) !== next) el.setAttribute(name, next);
   }
 }
+export interface WeekdayPresentation {
+  label?: string;
+  class?: string;
+  ariaLabel?: string;
+}
 export interface CalendarRenderOptions {
+  /** Per actual weekday, Sunday=0. Independent of column order or weekend flags. */
+  weekdays?: Partial<Record<number, WeekdayPresentation>>;
   renderCell?: (
     day: CalendarDay,
     state: ReturnType<PickerStore["getDay"]>,
@@ -77,7 +84,8 @@ export function calendarMarkup(
   render: CalendarRenderOptions = {},
 ): string {
   const { options, focusedDate } = store.getSnapshot(),
-    labels = weekdayLabels(options.locale, options.weekStartsOn);
+    labels = weekdayLabels(options.locale, options.weekStartsOn),
+    fullLabels = weekdayLabels(options.locale, options.weekStartsOn, "long");
   const grids = Array.from({ length: options.months }, (_, offset) =>
     store.getMonth(offset),
   );
@@ -91,7 +99,18 @@ export function calendarMarkup(
     : days.find((day) => !store.getDay(day.date).disabled)?.date;
   return Array.from({ length: options.months }, (_, index) => {
     const month = grids[index];
-    return `<section class="sp-month" data-part="month"><h3 data-part="month-title" aria-live="polite">${escapeHTML(formatMonth(month, options.locale))}</h3><table role="grid" aria-readonly="${!!options.readOnly}" aria-multiselectable="${options.selection === "range"}" aria-label="${escapeHTML(formatMonth(month, options.locale))}" class="sp-grid"><thead><tr>${labels.map((d) => `<th scope="col" data-part="weekday" data-weekday="${d.weekday}" ${options.weekend.includes(d.weekday) ? "data-weekend" : ""} aria-label="${escapeHTML(weekdayLabels(options.locale, options.weekStartsOn, "long").find((v) => v.weekday === d.weekday)!.label)}">${render.renderWeekday?.(d.weekday, d.label) ?? escapeHTML(d.label)}</th>`).join("")}</tr></thead><tbody>${month.weeks
+    const headings = labels
+      .map((day) => {
+        const custom = render.weekdays?.[day.weekday],
+          label = custom?.label ?? day.label,
+          accessible =
+            custom?.ariaLabel ??
+            (custom?.label ||
+              fullLabels.find((v) => v.weekday === day.weekday)!.label);
+        return `<th scope="col" data-part="weekday" data-weekday="${day.weekday}" class="${escapeHTML(custom?.class ?? "")}" ${options.weekend.includes(day.weekday) ? "data-weekend" : ""} aria-label="${escapeHTML(accessible)}">${render.renderWeekday?.(day.weekday, label) ?? escapeHTML(label)}</th>`;
+      })
+      .join("");
+    return `<section class="sp-month" data-part="month"><h3 data-part="month-title" aria-live="polite">${escapeHTML(formatMonth(month, options.locale))}</h3><table role="grid" aria-readonly="${!!options.readOnly}" aria-multiselectable="${options.selection === "range"}" aria-label="${escapeHTML(formatMonth(month, options.locale))}" class="sp-grid"><thead><tr>${headings}</tr></thead><tbody>${month.weeks
       .map(
         (week) =>
           `<tr>${week
@@ -123,7 +142,9 @@ export function bindCalendar(
   store: PickerStore,
   render: CalendarRenderOptions = {},
 ) {
-  let gridKey = "";
+  let gridKey = "",
+    active = true;
+  const pending = new Set<ReturnType<typeof setTimeout>>();
   const update = () => {
     const { options, visibleMonth, focusedDate } = store.getSnapshot();
     const key = JSON.stringify([
@@ -134,6 +155,7 @@ export function bindCalendar(
       options.fixedWeeks,
       options.locale,
       options.weekend,
+      render.weekdays,
     ]);
     const hadFocus = root.contains(root.ownerDocument.activeElement);
     if (key !== gridKey) {
@@ -186,8 +208,17 @@ export function bindCalendar(
     if (!trigger || !root.contains(trigger) || trigger.disabled) return;
     const date = trigger.dataset.date!;
     render.onDayClick?.(date, event);
-    if (event.defaultPrevented) return;
-    if (store.selectDate(date)) render.onSelect?.(date);
+    const task = setTimeout(() => {
+      pending.delete(task);
+      if (
+        active &&
+        root.isConnected &&
+        !event.defaultPrevented &&
+        store.selectDate(date)
+      )
+        render.onSelect?.(date);
+    }, 0);
+    pending.add(task);
   };
   const hover = (event: PointerEvent) => {
     if (event.pointerType === "touch") return;
@@ -241,6 +272,9 @@ export function bindCalendar(
   root.addEventListener("pointerleave", leave);
   root.addEventListener("keydown", key);
   return () => {
+    active = false;
+    for (const task of pending) clearTimeout(task);
+    pending.clear();
     stop();
     root.removeEventListener("click", click);
     root.removeEventListener("pointerover", hover);

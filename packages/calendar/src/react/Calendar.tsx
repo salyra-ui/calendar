@@ -15,6 +15,7 @@ import {
   dayTriggerAttributes,
   formatMonth,
   weekdayLabels,
+  escapeHTML,
   type CalendarRenderOptions,
 } from "../core";
 import { usePickerStore, usePicker } from "./context";
@@ -29,32 +30,49 @@ export interface CalendarProps
 /** Complete calendar surface. Use Grid/Cell/DayTrigger for app-owned cell content. */
 export const CalendarView = forwardRef<HTMLDivElement, CalendarProps>(
   function CalendarView(
-    { renderCell, renderWeekday, onDayClick, onSelect, ...props },
+    { renderCell, renderWeekday, weekdays, onDayClick, onSelect, ...props },
     ref,
   ) {
     const store = usePickerStore(),
       node = useRef<HTMLDivElement | null>(null);
-    const latest = useRef({ renderCell, renderWeekday, onDayClick, onSelect });
-    latest.current = { renderCell, renderWeekday, onDayClick, onSelect };
+    const latest = useRef({
+      renderCell,
+      renderWeekday,
+      weekdays,
+      onDayClick,
+      onSelect,
+    });
+    latest.current = {
+      renderCell,
+      renderWeekday,
+      weekdays,
+      onDayClick,
+      onSelect,
+    };
     useEffect(
       () =>
         bindCalendar(node.current!, store, {
+          weekdays,
           renderCell: (...args) =>
             latest.current.renderCell?.(...args) ??
             `<button type="button" data-day-trigger data-date="${args[0].date}">${args[0].day}</button>`,
           renderWeekday: (day, label) =>
-            latest.current.renderWeekday?.(day, label) ?? label,
+            latest.current.renderWeekday?.(day, label) ?? escapeHTML(label),
           onDayClick: (...args) => latest.current.onDayClick?.(...args),
           onSelect: (date) => latest.current.onSelect?.(date),
         }),
-      [store],
+      [store, weekdays, renderCell, renderWeekday],
     );
     return (
       <div
         {...props}
         data-part="calendar"
         dangerouslySetInnerHTML={{
-          __html: calendarMarkup(store, { renderCell, renderWeekday }),
+          __html: calendarMarkup(store, {
+            renderCell,
+            renderWeekday,
+            weekdays,
+          }),
         }}
         ref={(el) => {
           node.current = el;

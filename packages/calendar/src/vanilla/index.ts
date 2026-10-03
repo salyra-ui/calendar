@@ -34,7 +34,9 @@ export function mountPicker(
       bindMonthScroller(el, store, JSON.parse(el.dataset.continuous ?? "{}")),
     );
   for (const el of own("[data-calendar]"))
-    cleanups.push(bindCalendar(el, store));
+    cleanups.push(
+      bindCalendar(el, store, JSON.parse(el.dataset.calendarOptions ?? "{}")),
+    );
   for (const el of own("[data-day-trigger]"))
     if (!el.closest("[data-calendar]"))
       cleanups.push(

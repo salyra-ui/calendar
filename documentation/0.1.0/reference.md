@@ -93,6 +93,24 @@ Edits can be incomplete in draft. Well-formed field edits that violate constrain
 
 All native primitives accept custom classes, text and native event attributes. React uses className, other adapters use class. Default CSS is optional. Cell states are data-selected, data-range-start, data-range-end, data-in-range, data-preview, data-outside, data-weekend and data-today.
 
+## Weekday presentation and day actions
+
+`CalendarRenderOptions.weekdays` maps actual weekday numbers 0–6 to independent heading options. Sunday is 0. Changing weekStartsOn changes column order without changing these keys.
+
+| Key       | Values           | Behavior                                                                                  |
+| --------- | ---------------- | ----------------------------------------------------------------------------------------- |
+| label     | string, optional | Heading text. Omitted uses the localized default.                                         |
+| class     | string, optional | CSS classes on this heading's th. Uses class in the configuration for every adapter.      |
+| ariaLabel | string, optional | Accessible name. Omitted uses a nonempty custom label or the full localized weekday name. |
+
+React passes weekdays directly to Calendar.View. Svelte, Vue and Angular pass it in their calendar rendering options. Astro passes `renderOptions={{weekdays}}` to Calendar, alongside matching Root options. The same serialized names and classes are used during client mounting. Vanilla uses `bindCalendar(element, store, {weekdays})` or the data-calendar-options attribute when mounting existing HTML. Continuous accepts the same weekday presentation map.
+
+For a custom grid, use Calendar.Weekday with native classes and your own children or slots. Saturday and Sunday use the same primitive as all other days.
+
+`selection: 'none'` leaves value untouched while onSelect(date) allows the application to open an editor or another interface. `onDayClick(date, event)` runs before default selection and can call event.preventDefault. Native click handlers can also preventDefault. Pending selection actions are cancelled when their binding is disposed. The package owns no event editor or modal.
+
+The event example stores `{id, title, start: {date, time}, end: {date, time}}` using DateTimePicker in range mode. Both endpoints must be complete, and the example requires at least one minute. It shows an event on each covered day. An end at midnight excludes that final day. Existing event buttons reopen the full interval for editing. These event records live in the example application and are not a scheduler or persistence API.
+
 ## Store methods
 
 - getSnapshot(): immutable options, value, draft, visibleMonth, focusedDate, hoverDate, activeEndpoint, open and error.

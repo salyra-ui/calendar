@@ -16,6 +16,7 @@ export function bindDayTrigger(
   } = {},
 ) {
   let active = true;
+  const pending = new Set<ReturnType<typeof setTimeout>>();
   const ownDisabled = disabled ?? button.disabled,
     ownLabel = button.getAttribute("aria-label");
   const update = () => {
@@ -49,16 +50,19 @@ export function bindDayTrigger(
       button.focus();
   };
   const click = (event: MouseEvent) => {
-    queueMicrotask(() => {
+    const task = setTimeout(() => {
+      pending.delete(task);
       if (
         active &&
         button.isConnected &&
+        !button.disabled &&
         !event.defaultPrevented &&
         !(outside && store.getSnapshot().options.outsideSelectable === false) &&
         store.selectDate(date)
       )
         onSelect?.(date);
-    });
+    }, 0);
+    pending.add(task);
   };
   const hover = (event: PointerEvent) => {
     if (event.pointerType !== "touch" && !button.disabled) store.hover(date);
@@ -91,6 +95,8 @@ export function bindDayTrigger(
   button.addEventListener("keydown", key);
   return () => {
     active = false;
+    for (const task of pending) clearTimeout(task);
+    pending.clear();
     stop();
     button.removeEventListener("click", click);
     button.removeEventListener("pointerenter", hover);

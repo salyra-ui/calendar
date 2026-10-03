@@ -37,6 +37,7 @@ export const CalendarView = defineComponent({
       () => {
         if (element.value) bind();
       },
+      { deep: true },
     );
     onScopeDispose(() => stop?.());
     return () =>

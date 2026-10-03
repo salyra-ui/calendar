@@ -5,6 +5,10 @@
 - Split Calendar, DatePicker, TimePicker and DateTimePicker into four npm packages with shared dependencies.
 - Added package-specific store factories, Vanilla mounts and framework entries.
 
+- Added independent heading names, classes and accessible labels for all seven weekdays.
+- Native click handlers can cancel day selection before its default action.
+- Updated the event example to create and edit multi-day date-time intervals.
+
 This version is available as a local archive. It has not been published to npm.
 
 - Gregorian calendar calculations for years 1–9999, with configurable week starts and outside days.

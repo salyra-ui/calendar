@@ -1,11 +1,22 @@
 ---
-import { calendarMarkup, createPickerStore, type PickerOptions } from "../core";
+import {
+  calendarMarkup,
+  createPickerStore,
+  type PickerOptions,
+  type CalendarRenderOptions,
+} from "../core";
 interface Props {
   options: PickerOptions;
+  renderOptions?: Pick<CalendarRenderOptions, "weekdays">;
   class?: string;
 }
-const { options, ...attributes } = Astro.props;
-const html = calendarMarkup(createPickerStore(options));
+const { options, renderOptions = {}, ...attributes } = Astro.props;
+const html = calendarMarkup(createPickerStore(options), renderOptions);
 ---
 
-<div {...attributes} data-calendar set:html={html} />
+<div
+  {...attributes}
+  data-calendar
+  data-calendar-options={JSON.stringify(renderOptions)}
+  set:html={html}
+/>

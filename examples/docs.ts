@@ -312,7 +312,32 @@ document.querySelector("#app")!.innerHTML =
 }</pre><p>For an unanchored time interval, {time: "02:00", dayOffset: 3} ends three days after day zero. Give both endpoints dates when you need actual calendar dates. Mixing one dated endpoint with one undated endpoint is rejected.</p><p>Incomplete values remain in draft. A well-formed field edit can also stay in draft while it violates a constraint, so you can finish entering its other segments. The saved value stays valid. Apply validates both endpoints. Clear followed by Apply removes the saved value. Empty values are allowed unless the form binding requires a selection. Hover previews do not change the applied value.</p></section><section id="customization"><h2>Your content and controls</h2><p>Place a custom Number inside DayTrigger. Put event buttons beside the trigger inside Cell, so opening an event does not select the date. Move MonthSelect, YearSelect and Navigation outside the calendar grid.</p><pre>Calendar.Cell
   Calendar.DayTrigger
     Calendar.Number + your dot
-  your event buttons</pre><p>Weekday accepts custom content. weekStartsOn controls column order, while weekend controls the data-weekend state. Style cells using data-selected, data-in-range, data-range-start, data-range-end, data-outside and data-today.</p><p>bindCalendar accepts renderCell and renderWeekday for custom Vanilla and ready-made calendar content. These return trusted application markup. Use data-day-trigger and data-date on the day action. Selection states update through cell attributes without rebuilding event content on hover.</p></section><section id="recipes"><h2>Start with the part you need</h2><p>These stores work with every adapter. Pass store to a Root, or to mountPicker in Vanilla. The named createDatePickerStore, createTimePickerStore and createDateTimePickerStore helpers set the kind for you. Calendar, date, time and date-time use composition rather than component inheritance.</p><div class="recipe"><h3>Just a date</h3><button data-copy-code>Copy code</button><pre><code>import { createDatePickerStore } from '@salyra-ui/date-picker'
+  your event buttons</pre><p>Every weekday accepts its own name and class, including Saturday and Sunday. weekStartsOn changes the column order. It does not change the keys in weekdays, where Sunday is 0 and Saturday is 6. The weekend option only marks data-weekend.</p><p>bindCalendar accepts renderCell and renderWeekday for custom Vanilla and ready-made calendar content. These return trusted application markup. Use data-day-trigger and data-date on the day action. Selection states update through cell attributes without rebuilding event content on hover.</p></section><section id="recipes"><h2>Start with the part you need</h2><p>These stores work with every adapter. Pass store to a Root, or to mountPicker in Vanilla. The named createDatePickerStore, createTimePickerStore and createDateTimePickerStore helpers set the kind for you. Calendar, date, time and date-time use composition rather than component inheritance.</p><div class="recipe"><h3>Independent weekday headings</h3><button data-copy-code>Copy code</button><pre><code>const weekdays = {
+  1: { label: 'Monday', class: 'workday' },
+  6: { label: 'Saturday', class: 'saturday', ariaLabel: 'Saturday' },
+  0: { label: 'Sunday', class: 'sunday', ariaLabel: 'Sunday' }
+}
+
+// React. Configuration uses class, native props use className.
+&lt;Calendar.View weekdays={weekdays} /&gt;
+// Svelte: &lt;Calendar.View options={{ weekdays }} /&gt;
+// Vue: &lt;Calendar.View :options="{ weekdays }" /&gt;
+// Angular: &lt;div [spCalendar]="{ weekdays }"&gt;&lt;/div&gt;
+// Astro: &lt;Calendar options={pickerOptions} renderOptions={{ weekdays }} /&gt;
+// Vanilla: bindCalendar(element, store, { weekdays })</code></pre><p>label replaces the heading text. class applies to its th element. ariaLabel overrides its accessible name. Omitted days keep their localized names. For an app-owned grid, give each Calendar.Weekday its own children and native class instead.</p></div><div class="recipe"><h3>Your date click decides what opens</h3><button data-copy-code>Copy code</button><pre><code>// Navigation and day actions, without a selected value.
+const calendar = createPickerStore({
+  selection: 'none', referenceDate: '2026-10-03',
+  onSelect: date =&gt; openEventEditor(date)
+})
+bindCalendar(element, calendar)
+
+// Or cancel default selection in a date picker.
+bindCalendar(element, store, {
+  onDayClick(date, event) {
+    event.preventDefault()
+    openEventEditor(date)
+  }
+})</code></pre><p>The package supplies the date. Your application decides whether to open a drawer, show details or do something else. React and other native click handlers can also preventDefault. Event buttons remain separate from DayTrigger.</p></div><div class="recipe"><h3>Just a date</h3><button data-copy-code>Copy code</button><pre><code>import { createDatePickerStore } from '@salyra-ui/date-picker'
 
 const date = createDatePickerStore({
   selection: 'single',
@@ -379,8 +404,8 @@ function Month() {
 .my-calendar [data-today] [data-part="number"] { font-weight: 700; }
 .my-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }</code></pre><p>For Tailwind, skip the stylesheet and put utilities on your own primitives. Use data-selected, data-in-range and the other cell states in your variants. Labels, text, icons and event contents belong to your application.</p></div></section><section id="parts"><h2>Part props and native bindings</h2><table><thead><tr><th>Part</th><th>Keys / values</th><th>Use</th></tr></thead><tbody>
 <tr><td>Root</td><td>store, options, value</td><td>Use an external store or let Root create one. React receives options as props. Svelte and Vue receive an options object. Angular uses [spRoot].</td></tr>
-<tr><td>Calendar / View</td><td>renderCell, renderWeekday, onDayClick, onSelect</td><td>React receives renderer callbacks directly. Svelte, Vue and Angular use options. Astro uses matching Root options for SSR and mounts native default content. Vanilla passes callbacks to bindCalendar. onDayClick can preventDefault to cancel selection.</td></tr>
-<tr><td>Cell / Number / DayTrigger</td><td>date: YYYY-MM-DD, outside: boolean</td><td>date is required. Cell and DayTrigger accept outside. Number accepts custom children or slots. Angular Number uses label for custom text, with a separate sibling for dots or icons.</td></tr>
+<tr><td>Calendar / View</td><td>weekdays, renderCell, renderWeekday, onDayClick, onSelect</td><td>React receives renderer callbacks directly. Svelte, Vue and Angular use options. Astro uses matching Root options for SSR and mounts native default content. Vanilla passes callbacks to bindCalendar. onDayClick can preventDefault to cancel selection.</td></tr>
+<tr><td>Calendar weekday presentation</td><td>weekdays: {0..6: {label?, class?, ariaLabel?}}</td><td>Configure each heading independently. Sunday is 0. Astro passes this map in renderOptions so server and client use the same labels and classes.</td></tr><tr><td>Cell / Number / DayTrigger</td><td>date: YYYY-MM-DD, outside: boolean</td><td>date is required. Cell and DayTrigger accept outside. Number accepts custom children or slots. Angular Number uses label for custom text, with a separate sibling for dots or icons.</td></tr>
 <tr><td>DayTrigger callbacks</td><td>onSelect(date), native click</td><td>React/Svelte use onSelect. Vue emits select. Angular emits dateSelect. Native click remains available and can preventDefault. Event actions stay outside the day trigger.</td></tr>
 <tr><td>Heading / Weekday</td><td>offset: number / day: 0–6</td><td>Heading offset is supported in React and Vue. Custom children replace its caption. Weekday receives the actual weekday number, not a column index. Angular Weekday accepts label.</td></tr>
 <tr><td>Navigation / Action</td><td>direction: -1 | 1 / action: apply | cancel | clear</td><td>Own the button text and icons. Angular uses [spNavigate] and spAction. Vanilla uses data-picker-action, including previous and next.</td></tr>
