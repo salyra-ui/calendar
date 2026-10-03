@@ -8,6 +8,7 @@ import {
   formatMonth,
   type CalendarRenderOptions,
 } from "@salyra-ui/calendar";
+import { pickerControlMarkup, mountEndpointPickers } from "./picker-controls";
 import { mountDateTimePicker } from "@salyra-ui/date-time-picker/vanilla";
 
 type EventPoint = { date: string; time: string };
@@ -20,9 +21,9 @@ type CalendarEvent = {
 const dayNames = weekdayLabels("en-GB", 1, "long");
 const navigation = `<div class="calendar-navigation"><button type="button" data-picker-action="previous" aria-label="Previous month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><span data-month-heading aria-live="polite"></span><button type="button" data-picker-action="next" aria-label="Next month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div>`;
 const endpoint = (name: "start" | "end") =>
-  `<fieldset class="event-endpoint"><legend>${name === "start" ? "Starts" : "Ends"}</legend><label>${name === "start" ? "Start" : "End"} date<input type="text" data-date-field data-endpoint="${name}" placeholder="YYYY-MM-DD" aria-label="${name === "start" ? "Start" : "End"} date"></label><div class="event-clock"><label>Hours<input type="number" data-time-segment="hour" data-endpoint="${name}" aria-label="${name} hours"></label><label>Minutes<input type="number" data-time-segment="minute" data-endpoint="${name}" aria-label="${name} minutes"></label></div></fieldset>`;
+  `<fieldset class="event-endpoint"><legend>${name === "start" ? "Starts" : "Ends"}</legend>${pickerControlMarkup(name, "date", name === "start" ? "Start date" : "End date")}${pickerControlMarkup(name, "time", name === "start" ? "Start time" : "End time")}</fieldset>`;
 
-export const eventCalendarMarkup = `<div class="event-workspace"><div class="event-calendar-pane"><div id="event-navigation">${navigation}</div><div class="large-calendar-shell"><div class="large-calendar sp-calendar" id="event-calendar"></div></div><p id="event-action" role="status">Choose a date to create an event.</p></div><aside id="event-editor-panel" class="event-editor-panel"><div class="event-editor-heading"><h3 id="event-editor-title">New event</h3><button type="button" id="new-event">New</button></div><form id="event-form"><label>Event title<input name="title" placeholder="Enter a title" maxlength="80" required></label><div id="event-editor" data-picker-root>${endpoint("start")}${endpoint("end")}<details class="event-date-calendar"><summary>Choose dates on the calendar</summary>${navigation}<div class="sp-calendar" data-calendar></div></details></div><p id="event-error" role="alert"></p><div class="event-editor-actions"><button class="primary" type="submit" id="save-event">Add event</button><button type="button" id="cancel-event">Cancel</button></div></form><details id="event-export-panel" hidden><summary>Saved event</summary><pre id="event-export"></pre></details></aside></div><details class="weekday-customization"><summary>Weekday names and classes</summary><p>Each heading has its own text and class. The same options work for weekdays and weekends.</p><div class="weekday-editor">${dayNames.map((day) => `<div class="weekday-editor-row"><span>${day.label}</span><label>Name<input data-weekday-label="${day.weekday}" aria-label="${day.label} name" value="${day.label}" maxlength="24"></label><label>Class<input data-weekday-class="${day.weekday}" aria-label="${day.label} class" value="${[0, 6].includes(day.weekday) ? "weekday-red" : ""}" placeholder="Your CSS class"></label></div>`).join("")}</div><p>Try <code>weekday-red</code>, <code>weekday-blue</code> or <code>weekday-bold</code>. Your own stylesheet can define any other class.</p></details>`;
+export const eventCalendarMarkup = `<div class="event-workspace"><div class="event-calendar-pane"><div id="event-navigation">${navigation}</div><div class="large-calendar-shell"><div class="large-calendar sp-calendar" id="event-calendar"></div></div><p id="event-action" role="status">Choose a date to create an event.</p></div><aside id="event-editor-panel" class="event-editor-panel"><div class="event-editor-heading"><h3 id="event-editor-title">New event</h3><button type="button" id="new-event">New</button></div><form id="event-form"><label>Event title<input name="title" placeholder="Enter a title" maxlength="80" required></label><div id="event-editor" data-picker-root>${endpoint("start")}${endpoint("end")}</div><p id="event-error" role="alert"></p><div class="event-editor-actions"><button class="primary" type="submit" id="save-event">Add event</button><button type="button" id="cancel-event">Cancel</button></div></form><details id="event-export-panel" hidden><summary>Saved event</summary><pre id="event-export"></pre></details></aside></div><details class="weekday-customization"><summary>Weekday names and classes</summary><p>Each heading has its own text and class. The same options work for weekdays and weekends.</p><div class="weekday-editor">${dayNames.map((day) => `<div class="weekday-editor-row"><span>${day.label}</span><label>Name<input data-weekday-label="${day.weekday}" aria-label="${day.label} name" value="${day.label}" maxlength="24"></label><label>Class<input data-weekday-class="${day.weekday}" aria-label="${day.label} class" value="${[0, 6].includes(day.weekday) ? "weekday-red" : ""}" placeholder="Your CSS class"></label></div>`).join("")}</div><p>Try <code>weekday-red</code>, <code>weekday-blue</code> or <code>weekday-bold</code>. Your own stylesheet can define any other class.</p></details>`;
 
 /** Example application behavior. The package emits dates and owns no event editor. */
 export function mountEventCalendar(root: HTMLElement, referenceDate: string) {
@@ -48,6 +49,10 @@ export function mountEventCalendar(root: HTMLElement, referenceDate: string) {
     month: parseDate(initialDate),
   });
   const editorStore = picker.store;
+  const editorControls = mountEndpointPickers(
+    find("#event-editor"),
+    editorStore,
+  );
   const calendarStore = createPickerStore({
     referenceDate,
     selection: "none",
@@ -84,6 +89,7 @@ export function mountEventCalendar(root: HTMLElement, referenceDate: string) {
       editorStore.getSnapshot().error ?? manualError;
   }
   function openEditor(date: string, event?: CalendarEvent) {
+    editorControls.close();
     calendarStore.focus(date);
     editingId = event?.id ?? null;
     manualError = "";
@@ -169,6 +175,7 @@ export function mountEventCalendar(root: HTMLElement, referenceDate: string) {
     openEditor(calendarStore.getSnapshot().focusedDate),
   );
   listen(find("#cancel-event"), "click", () => {
+    editorControls.close();
     editorStore.cancel();
     editingId = null;
     manualError = "";
@@ -225,6 +232,7 @@ export function mountEventCalendar(root: HTMLElement, referenceDate: string) {
     stopCalendar?.();
     stopHeading();
     stopError();
+    editorControls.destroy();
     picker.destroy();
     calendarStore.destroy();
   };

@@ -8,6 +8,7 @@
 - Added independent heading names, classes and accessible labels for all seven weekdays.
 - Native click handlers can cancel day selection before its default action.
 - Updated the event example to create and edit multi-day date-time intervals.
+- Replaced bare date/time fields in the interval and event demos with button-triggered DatePicker calendars and TimePicker clock columns. Added downloadable example controls and styles.
 
 This version is available as a local archive. It has not been published to npm.
 

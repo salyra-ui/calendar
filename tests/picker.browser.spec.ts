@@ -1,4 +1,35 @@
-import { test, expect } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+import { test, expect, type Locator } from "@playwright/test";
+async function chooseDate(
+  host: Locator,
+  endpoint: "start" | "end",
+  date: string,
+) {
+  const control = host.locator(
+    `[data-choice-picker="date"][data-endpoint="${endpoint}"]`,
+  );
+  const trigger = control.locator(".picker-control-trigger");
+  await trigger.click();
+  await control.locator(`[data-day-trigger][data-date="${date}"]`).click();
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(trigger).toHaveAttribute("data-value", date);
+}
+async function chooseTime(
+  host: Locator,
+  endpoint: "start" | "end",
+  parts: { hour?: number; minute?: number; second?: number; period?: string },
+) {
+  const control = host.locator(
+    `[data-choice-picker="time"][data-endpoint="${endpoint}"]`,
+  );
+  await control.locator(".picker-control-trigger").click();
+  for (const [part, value] of Object.entries(parts))
+    await control
+      .locator(`[data-time-choice="${part}"][data-value="${value}"]`)
+      .click();
+  await control.getByRole("button", { name: "Done", exact: true }).click();
+}
+
 test("date range keeps a draft, normalizes clicks and exports only dates", async ({
   page,
 }) => {
@@ -51,20 +82,15 @@ test("time range ends on an explicit later date", async ({ page }) => {
   await page.goto("/");
   await page.locator("#kind").selectOption("time");
   const host = page.locator("#picker-host");
-  await host
-    .locator('[data-date-field][data-endpoint="start"]')
-    .fill("2026-10-03");
-  await host.getByRole("spinbutton", { name: "start hours" }).fill("22");
-  await host
-    .locator('[data-date-field][data-endpoint="end"]')
-    .fill("2026-10-06");
-  await host.getByRole("spinbutton", { name: "end hours" }).fill("9");
-  await host.getByRole("spinbutton", { name: "end minutes" }).fill("30");
+  await chooseDate(host, "start", "2026-10-03");
+  await chooseTime(host, "start", { hour: 22 });
+  await chooseDate(host, "end", "2026-10-06");
+  await chooseTime(host, "end", { hour: 9, minute: 30 });
   await host.getByRole("button", { name: "Apply", exact: true }).click();
   await expect(page.locator("#applied")).toContainText("2026-10-06");
   await expect(page.locator("#applied")).toContainText("09:30");
 });
-test("datetime on one day can be completed segment by segment", async ({
+test("datetime on one day uses separate endpoint time pickers", async ({
   page,
 }) => {
   await page.goto("/");
@@ -78,8 +104,8 @@ test("datetime on one day can be completed segment by segment", async ({
     .locator('[data-day-trigger][data-date="2026-10-03"]')
     .first()
     .click();
-  await host.getByRole("spinbutton", { name: "start hours" }).fill("9");
-  await host.getByRole("spinbutton", { name: "end hours" }).fill("17");
+  await chooseTime(host, "start", { hour: 9 });
+  await chooseTime(host, "end", { hour: 17 });
   await host.getByRole("button", { name: "Apply", exact: true }).click();
   await expect(page.locator("#applied")).toContainText("09:00");
   await expect(page.locator("#applied")).toContainText("17:00");
@@ -96,21 +122,14 @@ test("event editor saves a multi-day date-time interval and reopens it without s
     "New event on 2026-10-09",
   );
   await expect(
-    editor.locator('[data-date-field][data-endpoint="start"]'),
-  ).toHaveValue("2026-10-09");
+    editor.locator(
+      '[data-choice-picker="date"][data-endpoint="start"] .picker-control-trigger',
+    ),
+  ).toHaveAttribute("data-value", "2026-10-09");
   await page.locator('#event-form [name="title"]').fill("Review");
-  await editor
-    .locator('[data-date-field][data-endpoint="end"]')
-    .fill("2026-10-11");
-  await editor
-    .getByRole("spinbutton", { name: "start hours", exact: true })
-    .fill("12");
-  await editor
-    .getByRole("spinbutton", { name: "end hours", exact: true })
-    .fill("16");
-  await editor
-    .getByRole("spinbutton", { name: "end minutes", exact: true })
-    .fill("30");
+  await chooseDate(editor, "end", "2026-10-11");
+  await chooseTime(editor, "start", { hour: 12 });
+  await chooseTime(editor, "end", { hour: 16, minute: 30 });
   await page
     .locator("#event-form")
     .getByRole("button", { name: "Add event", exact: true })
@@ -131,11 +150,11 @@ test("event editor saves a multi-day date-time interval and reopens it without s
     "Editing event: Review",
   );
   await expect(
-    editor.locator('[data-date-field][data-endpoint="end"]'),
-  ).toHaveValue("2026-10-11");
-  await editor
-    .getByRole("spinbutton", { name: "end hours", exact: true })
-    .fill("18");
+    editor.locator(
+      '[data-choice-picker="date"][data-endpoint="end"] .picker-control-trigger',
+    ),
+  ).toHaveAttribute("data-value", "2026-10-11");
+  await chooseTime(editor, "end", { hour: 18 });
   await page
     .locator("#event-form")
     .getByRole("button", { name: "Save changes", exact: true })
@@ -190,24 +209,15 @@ test("invalid event endpoints stay out of the calendar and a midnight end does n
   await page.goto("/");
   const editor = page.locator("#event-editor");
   await page.locator('#event-form [name="title"]').fill("Night shift");
-  await editor
-    .locator('[data-date-field][data-endpoint="end"]')
-    .fill("2026-10-08");
+  await chooseDate(editor, "end", "2026-10-08");
   await page
     .locator("#event-form")
     .getByRole("button", { name: "Add event", exact: true })
     .click();
   await expect(page.locator("#event-calendar [data-event-id]")).toHaveCount(0);
   await expect(page.locator("#event-error")).not.toBeEmpty();
-  await editor
-    .locator('[data-date-field][data-endpoint="end"]')
-    .fill("2026-10-10");
-  await editor
-    .getByRole("spinbutton", { name: "end hours", exact: true })
-    .fill("0");
-  await editor
-    .getByRole("spinbutton", { name: "end minutes", exact: true })
-    .fill("0");
+  await chooseDate(editor, "end", "2026-10-10");
+  await chooseTime(editor, "end", { hour: 0, minute: 0 });
   await page
     .locator("#event-form")
     .getByRole("button", { name: "Add event", exact: true })
@@ -246,6 +256,9 @@ test("disabled blocks editing and the page fits a narrow viewport", async ({
   await expect(
     page.locator("#picker-host [data-day-trigger]").first(),
   ).toBeDisabled();
+  await expect(
+    page.locator("#picker-host .picker-control-trigger").first(),
+  ).toBeDisabled();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -266,7 +279,7 @@ test("continuous scrolling keeps the DOM bounded and follows the visible month",
   await expect(scroll.locator("h3").first()).toContainText("2036");
 });
 
-test("12-hour time input includes seconds and exports a 24-hour value", async ({
+test("12-hour time picker includes seconds and exports a 24-hour value", async ({
   page,
 }) => {
   await page.goto("/");
@@ -275,9 +288,7 @@ test("12-hour time input includes seconds and exports a 24-hour value", async ({
   await page.locator("#clock").selectOption("12");
   await page.locator("#seconds").check();
   const host = page.locator("#picker-host");
-  await host.getByRole("spinbutton", { name: "start hours" }).fill("3");
-  await host.getByRole("combobox", { name: "start period" }).selectOption("PM");
-  await host.getByRole("spinbutton", { name: "start seconds" }).fill("45");
+  await chooseTime(host, "start", { hour: 3, period: "PM", second: 45 });
   await host.getByRole("button", { name: "Apply", exact: true }).click();
   await expect(page.locator("#applied")).toContainText("15:00:45");
 });
@@ -303,6 +314,18 @@ test("documentation switches only its code block and keeps tables inside a mobil
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+  for (const name of ["picker-controls.ts", "picker-controls.css"]) {
+    const pending = page.waitForEvent("download");
+    await page
+      .getByRole("button", { name: `Download ${name}`, exact: true })
+      .click();
+    const download = await pending;
+    expect(download.suggestedFilename()).toBe(name);
+    const content = await readFile((await download.path())!, "utf8");
+    expect(content).toContain(
+      name.endsWith(".ts") ? "mountEndpointPickers" : ".endpoint-popup",
+    );
+  }
   for (const name of [
     "Calendar archive",
     "Date Picker archive",
@@ -383,4 +406,88 @@ test("a segmented clock can reach a minimum time without choosing a temporary la
     value: { time: "09:30" },
     invalid: "false",
   });
+});
+
+test("endpoint popups keep the draft on Escape and outside click, with one popup open at a time", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const host = page.locator("#picker-host");
+  await chooseDate(host, "start", "2026-10-09");
+  await chooseDate(host, "end", "2026-10-11");
+  const savedDraft = await page.locator("#draft").textContent();
+  const start = host.locator(
+    '[data-choice-picker="date"][data-endpoint="start"]',
+  );
+  const end = host.locator('[data-choice-picker="date"][data-endpoint="end"]');
+  await start.locator(".picker-control-trigger").click();
+  await expect(start.locator('[data-day-trigger][tabindex="0"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(start.locator(".endpoint-popup")).toBeHidden();
+  await expect(start.locator(".picker-control-trigger")).toBeFocused();
+  await expect(page.locator("#draft")).toHaveText(savedDraft!);
+  await start.locator(".picker-control-trigger").click();
+  await end.locator(".picker-control-trigger").click();
+  await expect(host.locator(".endpoint-popup:visible")).toHaveCount(1);
+  await expect(start.locator(".endpoint-popup")).toBeHidden();
+  await page.locator("#draft").click();
+  await expect(end.locator(".endpoint-popup")).toBeHidden();
+  await expect(page.locator("#draft")).toHaveText(savedDraft!);
+  expect(JSON.parse((await page.locator("#applied").textContent())!)).toEqual({
+    start: null,
+    end: null,
+  });
+});
+
+test("clock choices support arrows and keep edited time when the popup closes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator("#kind").selectOption("time");
+  await page.locator("#selection").selectOption("single");
+  const control = page.locator('#picker-host [data-choice-picker="time"]');
+  await control.locator(".picker-control-trigger").click();
+  await expect(
+    control.locator('[data-time-choice="hour"][data-value="0"]'),
+  ).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(
+    control.locator('[data-time-choice="hour"][data-value="1"]'),
+  ).toBeFocused();
+  await expect(
+    control.locator('[data-time-choice="hour"][data-value="1"]'),
+  ).toHaveAttribute("aria-checked", "true");
+  await page.keyboard.press("Escape");
+  await expect(control.locator(".picker-control-trigger")).toHaveAttribute(
+    "data-value",
+    "01:00",
+  );
+  await control.locator(".picker-control-trigger").click();
+  await expect(
+    control.locator('[data-time-choice="hour"][data-value="1"]'),
+  ).toHaveAttribute("aria-checked", "true");
+  await page.locator("#disabled").check();
+  await expect(control.locator(".endpoint-popup")).toBeHidden();
+  await expect(control.locator(".picker-control-trigger")).toBeDisabled();
+});
+
+test("date and time popups fit a phone viewport without native date or time inputs", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const editor = page.locator("#event-editor");
+  expect(await editor.locator("input").count()).toBe(0);
+  for (const part of ["date", "time"]) {
+    const control = editor.locator(
+      `[data-choice-picker="${part}"][data-endpoint="end"]`,
+    );
+    await control.locator(".picker-control-trigger").click();
+    const bounds = await control.locator(".endpoint-popup").boundingBox();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+    expect(bounds!.y).toBeGreaterThanOrEqual(0);
+    expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(844);
+    await page.keyboard.press("Escape");
+  }
 });

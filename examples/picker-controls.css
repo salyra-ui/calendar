@@ -1,0 +1,166 @@
+/* Example compositions: package calendars and clock state, app-owned popups. */
+.picker-control-trigger,
+.endpoint-popup button {
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--rule, #dddde2);
+  border-radius: 0;
+  min-height: 40px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.picker-control-trigger:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.picker-control-trigger:focus-visible,
+.endpoint-popup button:focus-visible {
+  outline: 2px solid var(--accent, #e4002b);
+  outline-offset: 3px;
+}
+.picker-control {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.picker-control + .picker-control {
+  margin-top: 16px;
+}
+.picker-control-label {
+  font-size: 12px;
+}
+.picker-control-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  width: 100%;
+  min-height: 44px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.picker-control-trigger[aria-expanded="true"] {
+  border-color: var(--accent, #e4002b);
+}
+.picker-control-trigger svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.endpoint-popup {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 10;
+  padding: 16px;
+  border: 1px solid #181818;
+  background: #fff;
+  overflow: auto;
+}
+.endpoint-popup[hidden] {
+  display: none;
+}
+.endpoint-popup .calendar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.endpoint-popup .calendar-navigation span {
+  font-size: 14px;
+}
+.endpoint-popup .calendar-navigation button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  padding: 8px;
+}
+.endpoint-popup .calendar-navigation svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.endpoint-popup .sp-month h3 {
+  display: none;
+}
+.endpoint-popup .sp-grid [data-day-trigger] {
+  width: 34px;
+  height: 36px;
+  min-height: 36px;
+  border-radius: 0;
+}
+.endpoint-popup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule, #dddde2);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.endpoint-popup-footer button {
+  margin-left: auto;
+  min-height: 36px;
+  font-size: 12px;
+}
+.time-choice-columns {
+  display: flex;
+  gap: 12px;
+}
+.time-choice-column {
+  flex: 1;
+  min-width: 0;
+}
+.time-choice-column h3 {
+  font-size: 12px;
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+.time-choice-list {
+  height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border: 1px solid var(--rule, #dddde2);
+}
+.time-choice-list button {
+  display: block;
+  width: 100%;
+  border: 0;
+  min-height: 40px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.time-choice-list button:hover {
+  background: #f7f7f8;
+}
+.time-choice-list button:focus-visible {
+  outline-offset: -3px;
+}
+.time-choice-period {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.time-choice-period button {
+  flex: 1;
+  font-size: 12px;
+}
+.endpoint-popup [data-time-choice][aria-checked="true"] {
+  background: var(--accent, #e4002b);
+  color: #fff;
+}
+@media (max-height: 560px) {
+  .time-choice-list {
+    height: 160px;
+  }
+}

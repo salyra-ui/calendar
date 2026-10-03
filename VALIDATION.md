@@ -8,7 +8,7 @@ Verified locally on 4 October 2026 with Node 24.19.0. The dependency install use
 | ------------------------------------------------- | ----------------------------------------------------------------------- |
 | Strict TypeScript                                 | Passed                                                                  |
 | Unit tests                                        | 27 passed                                                               |
-| Chromium browser tests                            | 28 passed                                                               |
+| Chromium browser tests                            | 31 passed                                                               |
 | Svelte client and server compilation              | Passed, with no Svelte diagnostics                                      |
 | Angular partial compilation                       | Passed                                                                  |
 | Astro component compilation and static site build | Passed                                                                  |
@@ -21,7 +21,7 @@ Verified locally on 4 October 2026 with Node 24.19.0. The dependency install use
 
 Additional checks cover independently styled weekend headings, React click cancellation, Astro heading hydration, multi-day event editing and midnight end boundaries. Weekday markup is tested for escaped text and classes.
 
-Browser coverage includes date ranges, explicit end dates, same-day date-time ranges, 12-hour input with seconds, disabled controls, historical navigation, keyboard navigation, popup focus, custom event actions, nested roots, mobile overflow and independent documentation tabs. Constraint-invalid segmented edits remain in draft until corrected.
+Browser coverage includes endpoint popup focus, Escape and outside-click draft preservation, clock arrow navigation, popup viewport bounds, date ranges, explicit end dates, same-day date-time ranges, 12-hour input with seconds, disabled controls, historical navigation, keyboard navigation, popup focus, custom event actions, nested roots, mobile overflow and independent documentation tabs. Constraint-invalid segmented edits remain in draft until corrected.
 
 Calendar arithmetic is compared with an independent UTC reference, including Gregorian leap-century rules and year boundaries. Time-zone tests cover missing and repeated wall times in Europe/Bucharest.
 

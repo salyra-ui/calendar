@@ -1,3 +1,28 @@
+import pickerControlsSource from "./picker-controls.ts?raw";
+import pickerControlsStyles from "./picker-controls.css?raw";
+import { escapeHTML } from "@salyra-ui/calendar";
+const popupRecipe = [
+  "import { mountDateTimePicker } from '@salyra-ui/date-time-picker/vanilla'",
+  "import { pickerControlMarkup, mountEndpointPickers } from './picker-controls'",
+  "import '@salyra-ui/date-time-picker/styles.css'",
+  "",
+  "root.innerHTML = [",
+  "  pickerControlMarkup('start', 'date', 'Start date'),",
+  "  pickerControlMarkup('start', 'time', 'Start time'),",
+  "  pickerControlMarkup('end', 'date', 'End date'),",
+  "  pickerControlMarkup('end', 'time', 'End time'),",
+  `  '<button type="button" data-picker-action="apply">Save interval</button>'`,
+  "].join('')",
+  "",
+  "const picker = mountDateTimePicker(root, {",
+  "  selection: 'range', commit: 'explicit', referenceDate: '2026-10-03'",
+  "})",
+  "const controls = mountEndpointPickers(root, picker.store)",
+  "",
+  "// When your editor unmounts:",
+  "// controls.destroy()",
+  "// picker.destroy()",
+].join("\n");
 import "./site.css";
 const frameworks = ["React", "Svelte", "Vue", "Angular", "Astro", "Vanilla"];
 const examples: Record<string, string> = {
@@ -312,7 +337,7 @@ document.querySelector("#app")!.innerHTML =
 }</pre><p>For an unanchored time interval, {time: "02:00", dayOffset: 3} ends three days after day zero. Give both endpoints dates when you need actual calendar dates. Mixing one dated endpoint with one undated endpoint is rejected.</p><p>Incomplete values remain in draft. A well-formed field edit can also stay in draft while it violates a constraint, so you can finish entering its other segments. The saved value stays valid. Apply validates both endpoints. Clear followed by Apply removes the saved value. Empty values are allowed unless the form binding requires a selection. Hover previews do not change the applied value.</p></section><section id="customization"><h2>Your content and controls</h2><p>Place a custom Number inside DayTrigger. Put event buttons beside the trigger inside Cell, so opening an event does not select the date. Move MonthSelect, YearSelect and Navigation outside the calendar grid.</p><pre>Calendar.Cell
   Calendar.DayTrigger
     Calendar.Number + your dot
-  your event buttons</pre><p>Every weekday accepts its own name and class, including Saturday and Sunday. weekStartsOn changes the column order. It does not change the keys in weekdays, where Sunday is 0 and Saturday is 6. The weekend option only marks data-weekend.</p><p>bindCalendar accepts renderCell and renderWeekday for custom Vanilla and ready-made calendar content. These return trusted application markup. Use data-day-trigger and data-date on the day action. Selection states update through cell attributes without rebuilding event content on hover.</p></section><section id="recipes"><h2>Start with the part you need</h2><p>These stores work with every adapter. Pass store to a Root, or to mountPicker in Vanilla. The named createDatePickerStore, createTimePickerStore and createDateTimePickerStore helpers set the kind for you. Calendar, date, time and date-time use composition rather than component inheritance.</p><div class="recipe"><h3>Independent weekday headings</h3><button data-copy-code>Copy code</button><pre><code>const weekdays = {
+  your event buttons</pre><p>Every weekday accepts its own name and class, including Saturday and Sunday. weekStartsOn changes the column order. It does not change the keys in weekdays, where Sunday is 0 and Saturday is 6. The weekend option only marks data-weekend.</p><p>bindCalendar accepts renderCell and renderWeekday for custom Vanilla and ready-made calendar content. These return trusted application markup. Use data-day-trigger and data-date on the day action. Selection states update through cell attributes without rebuilding event content on hover.</p></section><section id="recipes"><h2>Start with the part you need</h2><p>These stores work with every adapter. Pass store to a Root, or to mountPicker in Vanilla. The named createDatePickerStore, createTimePickerStore and createDateTimePickerStore helpers set the kind for you. Calendar, date, time and date-time use composition rather than component inheritance.</p><div class="recipe" id="endpoint-pickers"><h3>Dates and times behind buttons</h3><button data-copy-code>Copy code</button><pre><code>${escapeHTML(popupRecipe)}</code></pre><p>Each date button opens DatePicker. Each time button opens hour and minute columns using TimePicker. The parent DateTimePicker keeps the full interval, so changing the end date leaves the start alone. AM/PM and seconds follow its options.</p><p>These popup controls are part of the example, not extra package exports. Download both files into the same folder. The TypeScript file imports its CSS. Change their markup, classes and labels to match your application.</p><div class="example-downloads"><button type="button" data-control-file="script">Download picker-controls.ts</button><button type="button" data-control-file="style">Download picker-controls.css</button></div><p>Only the open popup mounts its calendar or clock choices. Escape, Close, Done and a click outside close it without cancelling the interval draft. Save interval commits the parent value. <a href="/#events">Try the event editor</a>.</p></div><div class="recipe"><h3>Independent weekday headings</h3><button data-copy-code>Copy code</button><pre><code>const weekdays = {
   1: { label: 'Monday', class: 'workday' },
   6: { label: 'Saturday', class: 'saturday', ariaLabel: 'Saturday' },
   0: { label: 'Sunday', class: 'sunday', ariaLabel: 'Sunday' }
@@ -560,3 +585,21 @@ document
     show(tabs[next].dataset.framework!);
     tabs[next].focus();
   });
+
+for (const button of document.querySelectorAll<HTMLButtonElement>(
+  "[data-control-file]",
+)) {
+  button.addEventListener("click", () => {
+    const script = button.dataset.controlFile === "script";
+    const url = URL.createObjectURL(
+      new Blob([script ? pickerControlsSource : pickerControlsStyles], {
+        type: "text/plain;charset=utf-8",
+      }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = script ? "picker-controls.ts" : "picker-controls.css";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+}

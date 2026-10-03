@@ -668,11 +668,6 @@ footer {
   font-size: 13px;
   font-weight: 700;
 }
-.event-clock {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
 .event-editor-actions {
   display: flex;
   gap: 8px;
@@ -689,31 +684,6 @@ footer {
 }
 #event-error:empty {
   display: none;
-}
-.event-date-calendar {
-  font-size: 12px;
-}
-.event-date-calendar summary,
-#event-export-panel summary {
-  cursor: pointer;
-}
-.event-date-calendar .calendar-navigation {
-  font-size: 11px;
-  gap: 8px;
-  margin-top: 16px;
-}
-.event-date-calendar .calendar-navigation button {
-  padding: 4px;
-  min-height: 30px;
-  font-size: 10px;
-}
-.event-date-calendar .sp-calendar {
-  font-size: 11px;
-}
-.event-date-calendar .sp-grid button {
-  min-height: 28px;
-  height: 28px;
-  width: 28px;
 }
 #event-export-panel {
   margin-top: 20px;
@@ -793,13 +763,13 @@ footer {
   min-width: 0;
   font-size: 13px;
 }
-.weekday-red {
+.sp-grid th.weekday-red {
   color: #e4002b;
 }
-.weekday-blue {
+.sp-grid th.weekday-blue {
   color: #002fa7;
 }
-.weekday-bold {
+.sp-grid th.weekday-bold {
   font-weight: 700;
 }
 @media (max-width: 1050px) {
@@ -852,4 +822,21 @@ footer {
   .event-list button small {
     font-size: 8px;
   }
+}
+
+.example-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.example-downloads button {
+  font-size: 12px;
+}
+
+.event-endpoint .picker-control + .picker-control {
+  margin-top: 0;
+}
+
+#event-export-panel summary {
+  cursor: pointer;
 }
