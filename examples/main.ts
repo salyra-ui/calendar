@@ -1,4 +1,4 @@
-import "../src/styles.css";
+import "../packages/calendar/src/styles.css";
 import "./site.css";
 import {
   createPickerStore,
@@ -14,8 +14,8 @@ import {
   type PickerStore,
   type Endpoint,
   type PickerOptions,
-} from "../src/core";
-import { mountPicker } from "../src/vanilla";
+} from "../packages/calendar/src/core";
+import { mountPicker } from "../packages/calendar/src/vanilla";
 const app = document.querySelector("#app")!;
 const referenceDate = "2026-10-03";
 export const nav = `<header class="site-nav"><a class="brand" href="/">salyra<span>/</span>ui</a><nav><a href="/">Examples</a><a href="/docs.html">Documentation</a><a href="https://github.com/salyra-ui">GitHub</a></nav></header>`;

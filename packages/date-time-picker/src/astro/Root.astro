@@ -1,0 +1,8 @@
+---
+import Root from "@salyra-ui/calendar/astro/Root.astro";
+const { options = {}, ...attributes } = Astro.props;
+---
+
+<Root {...attributes} options={{ ...options, kind: "datetime" }}>
+  <slot />
+</Root>

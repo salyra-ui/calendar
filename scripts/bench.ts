@@ -1,5 +1,8 @@
 import { performance } from "node:perf_hooks";
-import { createCalendarEngine, createPickerStore } from "../src/core";
+import {
+  createCalendarEngine,
+  createPickerStore,
+} from "../packages/calendar/src/core";
 const e = createCalendarEngine();
 let start = performance.now();
 for (let year = 1900; year < 2100; year++)

@@ -1,12 +1,12 @@
+import { DatePicker as Picker } from "@salyra-ui/date-picker/react";
+import { DateTimePicker } from "@salyra-ui/date-time-picker/react";
 import { createRoot } from "react-dom/client";
 import {
-  DatePicker as Picker,
-  DateTimePicker,
   Calendar,
   usePickerStore,
   useCalendarMonth,
   createPickerStore,
-} from "../src/react";
+} from "@salyra-ui/calendar/react";
 const store = createPickerStore({
   selection: "range",
   referenceDate: "2026-10-03",

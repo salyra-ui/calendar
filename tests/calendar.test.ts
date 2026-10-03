@@ -9,7 +9,7 @@ import {
   addDays,
   addMonths,
   weekNumber,
-} from "../src/core";
+} from "../packages/calendar/src/core";
 describe("Gregorian calculations", () => {
   it("matches an independent UTC reference across historical and future years", () => {
     for (const year of [

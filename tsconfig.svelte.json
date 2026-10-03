@@ -1,9 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "include": [
-    "src/svelte/**/*.ts",
-    "src/svelte/**/*.svelte",
-    "src/core/**/*.ts"
+    "packages/calendar/src/svelte/**/*.ts",
+    "packages/calendar/src/svelte/**/*.svelte",
+    "packages/calendar/src/core/**/*.ts"
   ],
   "compilerOptions": { "types": ["svelte"] }
 }

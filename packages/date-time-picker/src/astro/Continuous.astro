@@ -1,0 +1,8 @@
+---
+import Part from "@salyra-ui/calendar/astro/Continuous.astro";
+const { pickerOptions = {}, ...attributes } = Astro.props;
+---
+
+<Part {...attributes} pickerOptions={{ ...pickerOptions, kind: "datetime" }}>
+  <slot />
+</Part>

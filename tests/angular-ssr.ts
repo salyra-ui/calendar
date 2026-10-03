@@ -10,7 +10,11 @@ import {
   renderApplication,
   provideServerRendering,
 } from "@angular/platform-server";
-import { PickerRoot, CalendarView, type PickerOptions } from "../src/angular";
+import {
+  PickerRoot,
+  CalendarView,
+  type PickerOptions,
+} from "../packages/calendar/src/angular";
 const INITIAL = new InjectionToken<string>("Date");
 @Component({
   selector: "ssr-test",

@@ -8,7 +8,7 @@ import {
   CalendarNumber,
   TimeSegmentField,
   createPickerStore,
-} from "../src/angular";
+} from "../packages/calendar/src/angular";
 @Component({
   selector: "date-demo",
   standalone: true,

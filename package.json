@@ -1,9 +1,9 @@
 {
-  "name": "@salyra-ui/date-picker",
+  "name": "salyra-calendar-workspace",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Composable calendars and date, time and date-time pickers",
+  "description": "Salyra UI calendar and picker package workspace",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 4330",
     "test": "vitest run",
@@ -17,49 +17,6 @@
     "verify:package": "tsx scripts/verify-package.ts",
     "dev:astro": "astro dev --root examples/astro --host 127.0.0.1 --port 4331",
     "build:astro": "astro build --root examples/astro"
-  },
-  "exports": {
-    ".": "./src/core/index.ts",
-    "./react": "./src/react/index.tsx",
-    "./svelte": "./src/svelte/index.ts",
-    "./vue": "./src/vue/index.ts",
-    "./angular": "./src/angular/index.ts",
-    "./vanilla": "./src/vanilla/index.ts",
-    "./astro": "./src/vanilla/index.ts",
-    "./astro/*": "./src/astro/*",
-    "./styles.css": "./src/styles.css"
-  },
-  "sideEffects": [
-    "**/*.css",
-    "**/astro/client.*"
-  ],
-  "peerDependencies": {
-    "react": ">=18",
-    "svelte": ">=5",
-    "vue": ">=3.5",
-    "@angular/core": ">=20",
-    "@angular/common": ">=20",
-    "astro": ">=7"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "svelte": {
-      "optional": true
-    },
-    "vue": {
-      "optional": true
-    },
-    "@angular/core": {
-      "optional": true
-    },
-    "@angular/common": {
-      "optional": true
-    },
-    "astro": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@angular/common": "~20.3.33",
@@ -96,5 +53,8 @@
     "vite": "^6.1.0",
     "vitest": "^4.1.11",
     "vue": "^3.5.0"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -1,4 +1,4 @@
-import "../src/styles.css";
+import "../packages/calendar/src/styles.css";
 import "./site.css";
 const framework =
   new URLSearchParams(location.search).get("framework") ?? "react";

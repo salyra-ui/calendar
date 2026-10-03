@@ -1,16 +1,27 @@
 ---
-import DateTimePicker from "../../../../src/astro/DateTimePicker.astro";
-import Segment from "../../../../src/astro/Segment.astro";
-import Root from "../../../../src/astro/Root.astro";
-import Calendar from "../../../../src/astro/Calendar.astro";
-import Action from "../../../../src/astro/Action.astro";
-import "../../../../src/styles.css";
+import DateTimePicker from "@salyra-ui/date-time-picker/astro/Root.astro";
+import Segment from "@salyra-ui/date-time-picker/astro/Segment.astro";
+import DateTimeCalendar from "@salyra-ui/date-time-picker/astro/Calendar.astro";
+import Root from "../../../../packages/calendar/src/astro/Root.astro";
+import Calendar from "../../../../packages/calendar/src/astro/Calendar.astro";
+import Action from "../../../../packages/calendar/src/astro/Action.astro";
+import "../../../../packages/calendar/src/styles.css";
 import "../../../site.css";
 const options = {
   selection: "range",
   commit: "explicit",
   referenceDate: "2026-10-03",
   month: { year: 2010, month: 3 },
+} as const;
+const intervalOptions = {
+  selection: "range",
+  referenceDate: "2010-03-01",
+  month: { year: 2010, month: 3 },
+  minDuration: 3600,
+  defaultValue: {
+    start: { date: "2010-03-09", time: "13:00" },
+    end: { date: "2010-03-09", time: "14:00" },
+  },
 } as const;
 ---
 
@@ -21,7 +32,7 @@ const options = {
   <body>
     <main style="padding:40px">
       <h1>Astro</h1>
-      <Root {options}>
+      <Root {options} id="date-editor">
         <Calendar {options} class="sp-calendar" />
         <Action action="apply">Apply</Action>
         <output id="value" data-picker-output></output>
@@ -44,6 +55,12 @@ const options = {
           </label>
           <Action action="apply">Apply</Action>
           <output id="dt-value" data-picker-output></output>
+        </DateTimePicker>
+      </section>
+      <section id="astro-duration">
+        <h2>One-hour date-time range</h2>
+        <DateTimePicker options={intervalOptions}>
+          <DateTimeCalendar options={intervalOptions} class="sp-calendar" />
         </DateTimePicker>
       </section>
     </main>

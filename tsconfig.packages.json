@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "packages",
+    "outDir": "artifacts/package-types"
+  },
+  "include": [
+    "packages/date-picker/src/*.ts",
+    "packages/date-picker/src/*.tsx",
+    "packages/time-picker/src/*.ts",
+    "packages/time-picker/src/*.tsx",
+    "packages/date-time-picker/src/*.ts",
+    "packages/date-time-picker/src/*.tsx"
+  ]
+}

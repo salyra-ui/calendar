@@ -4,7 +4,7 @@ import {
   resolveZonedDateTime,
   updateTime,
   timeSlots,
-} from "../src/core";
+} from "../packages/calendar/src/core";
 it("keeps navigation separate from selection", () => {
   const s = createPickerStore({ value: { date: "2026-10-03" } });
   s.setVisibleMonth({ year: 2010, month: 3 });

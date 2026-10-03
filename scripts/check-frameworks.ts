@@ -1,15 +1,27 @@
-import { readdir, readFile, mkdir, writeFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { compile } from "svelte/compiler";
 import { transform } from "@astrojs/compiler";
-for (const file of await readdir("src/svelte"))
-  if (file.endsWith(".svelte")) {
-    const source = await readFile(`src/svelte/${file}`, "utf8");
+const shared = "packages/calendar/src/svelte";
+for (const file of await readdir(shared))
+  if (file.endsWith(".svelte"))
     for (const generate of ["client", "server"] as const)
-      compile(source, { filename: `src/svelte/${file}`, generate });
-  }
-for (const file of await readdir("src/astro"))
-  if (file.endsWith(".astro"))
-    await transform(await readFile(`src/astro/${file}`, "utf8"), {
-      filename: `src/astro/${file}`,
-    });
-console.log("Svelte client/server components and Astro components compiled");
+      compile(await readFile(`${shared}/${file}`, "utf8"), {
+        filename: `${shared}/${file}`,
+        generate,
+      });
+for (const slug of [
+  "calendar",
+  "date-picker",
+  "time-picker",
+  "date-time-picker",
+]) {
+  const dir = `packages/${slug}/src/astro`;
+  for (const file of await readdir(dir))
+    if (file.endsWith(".astro"))
+      await transform(await readFile(`${dir}/${file}`, "utf8"), {
+        filename: `${dir}/${file}`,
+      });
+}
+console.log(
+  "Shared Svelte client/server primitives and all four Astro package components compiled",
+);

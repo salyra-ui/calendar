@@ -1,11 +1,11 @@
+import { DatePicker as Picker } from "@salyra-ui/date-picker/vue";
+import { DateTimePicker } from "@salyra-ui/date-time-picker/vue";
 import { createApp, h, ref } from "vue";
 import {
-  DatePicker as Picker,
-  DateTimePicker,
   Calendar,
   createPickerStore,
   type PickerValue,
-} from "../src/vue";
+} from "@salyra-ui/calendar/vue";
 const store = createPickerStore({
   selection: "range",
   referenceDate: "2026-10-03",

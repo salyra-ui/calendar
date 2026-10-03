@@ -178,24 +178,31 @@ test("documentation switches only its code block and keeps tables inside a mobil
   await page.goto("/docs.html");
   await page.getByRole("tab", { name: "Svelte", exact: true }).click();
   await expect(page.locator("#source")).toContainText(
-    "@salyra-ui/date-picker/svelte",
+    "@salyra-ui/date-time-picker/svelte",
   );
   await page.getByRole("tab", { name: "Vue", exact: true }).click();
   await expect(page.locator("#source")).toContainText(
-    "@salyra-ui/date-picker/vue",
+    "@salyra-ui/date-time-picker/vue",
   );
   await expect(page.locator("#source")).not.toContainText(
-    "@salyra-ui/date-picker/svelte",
+    "@salyra-ui/date-time-picker/svelte",
   );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  const href = await page
-    .getByRole("link", { name: "Download the local package" })
-    .getAttribute("href");
-  expect((await page.request.get(href!)).ok()).toBe(true);
+  for (const name of [
+    "Calendar archive",
+    "Date Picker archive",
+    "Time Picker archive",
+    "Date Time Picker archive",
+  ]) {
+    const href = await page
+      .getByRole("link", { name, exact: true })
+      .getAttribute("href");
+    expect((await page.request.get(href!)).ok()).toBe(true);
+  }
 });
 
 test("manual time segments preserve seconds when the ready-made seconds control is hidden", async ({
@@ -226,7 +233,7 @@ test("manual time segments preserve seconds when the ready-made seconds control 
     second.remove();
     store.destroy();
     return { afterHour, afterSecond };
-  }, "/src/core/index.ts");
+  }, "/packages/calendar/src/core/index.ts");
   expect(result).toEqual({ afterHour: "11:30:45", afterSecond: "11:30:50" });
 });
 
@@ -259,7 +266,7 @@ test("a segmented clock can reach a minimum time without choosing a temporary la
     minute.remove();
     store.destroy();
     return { pending, value, invalid };
-  }, "/src/core/index.ts");
+  }, "/packages/calendar/src/core/index.ts");
   expect(result).toEqual({
     pending: null,
     value: { time: "09:30" },

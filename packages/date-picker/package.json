@@ -1,0 +1,57 @@
+{
+  "name": "@salyra-ui/date-picker",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Composable date selection and date ranges",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./react": "./src/react.tsx",
+    "./vue": "./src/vue.ts",
+    "./svelte": "./src/svelte.ts",
+    "./angular": "./src/angular.ts",
+    "./vanilla": "./src/vanilla.ts",
+    "./astro": "./src/vanilla.ts",
+    "./astro/*": "./src/astro/*",
+    "./styles.css": "./src/styles.css"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/astro/client.*"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "svelte": ">=5",
+    "vue": ">=3.5",
+    "@angular/core": ">=20",
+    "@angular/common": ">=20",
+    "astro": ">=7"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
+    "@angular/common": {
+      "optional": true
+    },
+    "astro": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@salyra-ui/calendar": "0.1.0"
+  },
+  "private": true
+}

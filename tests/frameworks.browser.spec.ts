@@ -34,8 +34,12 @@ test("Astro seeds its server grid and applies a client range", async ({
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(url);
-  await page.locator('[data-day-trigger][data-date="2010-03-09"]').click();
-  await page.locator('[data-day-trigger][data-date="2010-03-12"]').click();
+  await page
+    .locator('#date-editor [data-day-trigger][data-date="2010-03-09"]')
+    .click();
+  await page
+    .locator('#date-editor [data-day-trigger][data-date="2010-03-12"]')
+    .click();
   await page
     .getByRole("button", { name: "Apply", exact: true })
     .first()
@@ -84,4 +88,16 @@ test("nested Astro roots keep calendar actions and values isolated", async ({
     .click();
   await expect(page.locator("#outer-value")).toContainText("2010-03-20");
   await expect(page.locator("#inner-value")).toContainText("2026-10-09");
+});
+
+test("Astro package calendar keeps date-time duration units during SSR", async ({
+  page,
+}) => {
+  await page.goto("http://127.0.0.1:4331/");
+  const cell = page.locator(
+    '#astro-duration [data-calendar] [data-date="2010-03-09"][role="gridcell"]',
+  );
+  await expect(cell).toHaveAttribute("data-selected", "");
+  await expect(cell).toHaveAttribute("data-range-start", "");
+  await expect(cell).toHaveAttribute("data-range-end", "");
 });

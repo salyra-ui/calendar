@@ -4,6 +4,19 @@ Development preview. This reference describes the local archive, not an npm rele
 
 Calendar, DatePicker, TimePicker and DateTimePicker compose the same store. The core contains no framework dependency. SSR requires an instance per request and matching referenceDate, locale, timeZone and value on the client. Dates use Gregorian years 1–9999.
 
+## Package boundaries
+
+| Package                     | Dependencies                       | Factory                                    |
+| --------------------------- | ---------------------------------- | ------------------------------------------ |
+| @salyra-ui/calendar         | None                               | createPickerStore(options), including kind |
+| @salyra-ui/date-picker      | calendar                           | createDatePickerStore(options)             |
+| @salyra-ui/time-picker      | calendar                           | createTimePickerStore(options)             |
+| @salyra-ui/date-time-picker | calendar, date-picker, time-picker | createDateTimePickerStore(options)         |
+
+All four have framework entries. Import the matching package, such as `@salyra-ui/time-picker/svelte`. npm will install declared package dependencies after publication. For a local archive install, pass the dependency archives to npm together. DateTimePicker uses the DatePicker and TimePicker parts in the same context.
+
+The picker factories and Vanilla mountPicker fix their package's kind. A supplied store must match. Angular's native PickerRoot directive remains generic and requires kind in its options. React, Svelte, Vue and Astro roots choose their package's kind.
+
 ## Parts
 
 | Part                     | Behavior                                                                                                  |
@@ -127,8 +140,8 @@ bindPickerPopover(trigger,content,store,{modal,label}) handles Escape, outside c
 ### React
 
 ```
-import { DateTimePicker as Picker } from '@salyra-ui/date-picker/react';
-import '@salyra-ui/date-picker/styles.css';
+import { DateTimePicker as Picker } from '@salyra-ui/date-time-picker/react';
+import '@salyra-ui/date-time-picker/styles.css';
 
 export function Editor() {
   return <Picker.Root selection="range" commit="explicit"
@@ -150,8 +163,8 @@ export function Editor() {
 
 ```
 <script lang="ts">
-  import { DateTimePicker as Picker } from '@salyra-ui/date-picker/svelte';
-  import '@salyra-ui/date-picker/styles.css';
+  import { DateTimePicker as Picker } from '@salyra-ui/date-time-picker/svelte';
+  import '@salyra-ui/date-time-picker/styles.css';
   const options = { selection: 'range', commit: 'explicit',
     referenceDate: '2026-10-03', month: {year: 2026, month: 10} } as const;
 </script>
@@ -173,8 +186,8 @@ export function Editor() {
 
 ```
 <script setup lang="ts">
-import { DateTimePicker as Picker } from '@salyra-ui/date-picker/vue';
-import '@salyra-ui/date-picker/styles.css';
+import { DateTimePicker as Picker } from '@salyra-ui/date-time-picker/vue';
+import '@salyra-ui/date-time-picker/styles.css';
 const options = { selection: 'range', kind: 'datetime', commit: 'explicit',
   referenceDate: '2026-10-03', month: {year: 2026, month: 10} } as const;
 </script>
@@ -197,7 +210,7 @@ const options = { selection: 'range', kind: 'datetime', commit: 'explicit',
 ```
 import { Component } from '@angular/core';
 import { PickerRoot, CalendarView, DateField, TimeSegmentField,
-  createPickerStore } from '@salyra-ui/date-picker/angular';
+  createPickerStore } from '@salyra-ui/date-time-picker/angular';
 
 @Component({ selector: 'app-date-editor', standalone: true,
   imports: [PickerRoot, CalendarView, DateField, TimeSegmentField],
@@ -216,19 +229,19 @@ export class DateEditor {
     referenceDate: '2026-10-03'} as const;
   readonly store = createPickerStore(this.options);
 }
-// Add @import '@salyra-ui/date-picker/styles.css' to your global stylesheet.
+// Add @import '@salyra-ui/date-time-picker/styles.css' to your global stylesheet.
 ```
 
 ### Astro
 
 ```
 ---
-import Root from '@salyra-ui/date-picker/astro/DateTimePicker.astro';
-import Calendar from '@salyra-ui/date-picker/astro/Calendar.astro';
-import Field from '@salyra-ui/date-picker/astro/Field.astro';
-import Segment from '@salyra-ui/date-picker/astro/Segment.astro';
-import Action from '@salyra-ui/date-picker/astro/Action.astro';
-import '@salyra-ui/date-picker/styles.css';
+import Root from '@salyra-ui/date-time-picker/astro/DateTimePicker.astro';
+import Calendar from '@salyra-ui/date-time-picker/astro/Calendar.astro';
+import Field from '@salyra-ui/date-time-picker/astro/Field.astro';
+import Segment from '@salyra-ui/date-time-picker/astro/Segment.astro';
+import Action from '@salyra-ui/date-time-picker/astro/Action.astro';
+import '@salyra-ui/date-time-picker/styles.css';
 const options = {kind: 'datetime', selection: 'range', commit: 'explicit',
   referenceDate: '2026-10-03', month: {year: 2026, month: 10}} as const;
 ---
@@ -247,8 +260,8 @@ const options = {kind: 'datetime', selection: 'range', commit: 'explicit',
 ### Vanilla
 
 ```
-import { mountPicker } from '@salyra-ui/date-picker/vanilla';
-import '@salyra-ui/date-picker/styles.css';
+import { mountPicker } from '@salyra-ui/date-time-picker/vanilla';
+import '@salyra-ui/date-time-picker/styles.css';
 
 // Existing markup inside #editor:
 // <div data-calendar class="sp-calendar"></div>

@@ -1,8 +1,8 @@
 import "./site.css";
 const frameworks = ["React", "Svelte", "Vue", "Angular", "Astro", "Vanilla"];
 const examples: Record<string, string> = {
-  React: `import { DateTimePicker as Picker } from '@salyra-ui/date-picker/react';
-import '@salyra-ui/date-picker/styles.css';
+  React: `import { DateTimePicker as Picker } from '@salyra-ui/date-time-picker/react';
+import '@salyra-ui/date-time-picker/styles.css';
 
 export function Editor() {
   return <Picker.Root selection="range" commit="explicit"
@@ -19,8 +19,8 @@ export function Editor() {
   </Picker.Root>;
 }`,
   Svelte: `<script lang="ts">
-  import { DateTimePicker as Picker } from '@salyra-ui/date-picker/svelte';
-  import '@salyra-ui/date-picker/styles.css';
+  import { DateTimePicker as Picker } from '@salyra-ui/date-time-picker/svelte';
+  import '@salyra-ui/date-time-picker/styles.css';
   const options = { selection: 'range', commit: 'explicit',
     referenceDate: '2026-10-03', month: {year: 2026, month: 10} } as const;
 </script>
@@ -37,8 +37,8 @@ export function Editor() {
   <Picker.Action action="cancel">Cancel</Picker.Action>
 </Picker.Root>`,
   Vue: `<script setup lang="ts">
-import { DateTimePicker as Picker } from '@salyra-ui/date-picker/vue';
-import '@salyra-ui/date-picker/styles.css';
+import { DateTimePicker as Picker } from '@salyra-ui/date-time-picker/vue';
+import '@salyra-ui/date-time-picker/styles.css';
 const options = { selection: 'range', kind: 'datetime', commit: 'explicit',
   referenceDate: '2026-10-03', month: {year: 2026, month: 10} } as const;
 </script>
@@ -56,7 +56,7 @@ const options = { selection: 'range', kind: 'datetime', commit: 'explicit',
 </template>`,
   Angular: `import { Component } from '@angular/core';
 import { PickerRoot, CalendarView, DateField, TimeSegmentField,
-  createPickerStore } from '@salyra-ui/date-picker/angular';
+  createPickerStore } from '@salyra-ui/date-time-picker/angular';
 
 @Component({ selector: 'app-date-editor', standalone: true,
   imports: [PickerRoot, CalendarView, DateField, TimeSegmentField],
@@ -75,14 +75,14 @@ export class DateEditor {
     referenceDate: '2026-10-03'} as const;
   readonly store = createPickerStore(this.options);
 }
-// Add @import '@salyra-ui/date-picker/styles.css' to your global stylesheet.`,
+// Add @import '@salyra-ui/date-time-picker/styles.css' to your global stylesheet.`,
   Astro: `---
-import Root from '@salyra-ui/date-picker/astro/DateTimePicker.astro';
-import Calendar from '@salyra-ui/date-picker/astro/Calendar.astro';
-import Field from '@salyra-ui/date-picker/astro/Field.astro';
-import Segment from '@salyra-ui/date-picker/astro/Segment.astro';
-import Action from '@salyra-ui/date-picker/astro/Action.astro';
-import '@salyra-ui/date-picker/styles.css';
+import Root from '@salyra-ui/date-time-picker/astro/DateTimePicker.astro';
+import Calendar from '@salyra-ui/date-time-picker/astro/Calendar.astro';
+import Field from '@salyra-ui/date-time-picker/astro/Field.astro';
+import Segment from '@salyra-ui/date-time-picker/astro/Segment.astro';
+import Action from '@salyra-ui/date-time-picker/astro/Action.astro';
+import '@salyra-ui/date-time-picker/styles.css';
 const options = {kind: 'datetime', selection: 'range', commit: 'explicit',
   referenceDate: '2026-10-03', month: {year: 2026, month: 10}} as const;
 ---
@@ -96,8 +96,8 @@ const options = {kind: 'datetime', selection: 'range', commit: 'explicit',
   <label>End minutes <Segment part="minute" endpoint="end" /></label>
   <Action action="apply">Save interval</Action>
 </Root>`,
-  Vanilla: `import { mountPicker } from '@salyra-ui/date-picker/vanilla';
-import '@salyra-ui/date-picker/styles.css';
+  Vanilla: `import { mountPicker } from '@salyra-ui/date-time-picker/vanilla';
+import '@salyra-ui/date-time-picker/styles.css';
 
 // Existing markup inside #editor:
 // <div data-calendar class="sp-calendar"></div>
@@ -111,7 +111,7 @@ import '@salyra-ui/date-picker/styles.css';
 
 // Mark nested editors with data-picker-root before mounting a parent.
 const picker = mountPicker(document.querySelector('#editor'), {
-  kind: 'datetime', selection: 'range', commit: 'explicit',
+  selection: 'range', commit: 'explicit',
   referenceDate: '2026-10-03', month: {year: 2026, month: 10},
   onValueChange: value => console.log(value)
 });
@@ -306,19 +306,23 @@ const parts = [
   ["Action", "Apply, Cancel or Clear with your own text and classes."],
 ];
 document.querySelector("#app")!.innerHTML =
-  `<header class="site-nav"><a class="brand" href="/">salyra<span>/</span>ui</a><nav><a href="/">Examples</a><a href="/docs.html">Documentation</a></nav></header><div class="docs-layout"><aside class="docs-sidebar"><a href="#setup">Setup</a><a href="#composition">Composition</a><a href="#values">Values & ranges</a><a href="#customization">Customization</a><a href="#recipes">Recipes</a><a href="#parts">Part props</a><a href="#options">Options</a><a href="#methods">Store methods</a><a href="#ssr">SSR & time zones</a></aside><main class="docs-content"><p class="eyebrow">Development preview · <a href="/changelog.html">0.1.0</a></p><h1>Calendar &<br>date pickers.</h1><p>Calendar calculations, selection and time controls share one core. Choose a ready-made surface or compose the native controls in your own layout.</p><section id="setup"><h2>Setup</h2><div class="docs-callout">This package is a local development preview. It is not published on npm. Build the archive with npm run build, then install the generated .tgz in your project.</div><pre>npm install ./salyra-ui-date-picker-0.1.0.tgz</pre><p>Import only your framework entry. The default stylesheet is optional. Vanilla browser files have readable and minified variants.</p><a class="download-package" href="/downloads/salyra-ui-date-picker-0.1.0.tgz" download>Download the local package</a></section><section id="composition"><h2>Compose an editor</h2><p>Use DatePicker for days, TimePicker for hours, or DateTimePicker for both. Calendar can also navigate and render cells with selection turned off.</p><div class="code-example"><div class="code-toolbar"><div class="framework-tabs" role="tablist">${frameworks.map((f) => `<button role="tab" id="framework-${f.toLowerCase()}" aria-controls="source" data-framework="${f}" aria-selected="false">${f}</button>`).join("")}</div><button id="copy">Copy code</button></div><pre><code id="source" role="tabpanel" tabindex="0"></code></pre><p id="copy-status" role="status"></p></div><table><thead><tr><th>Part</th><th>Use</th></tr></thead><tbody>${parts.map((r) => `<tr><td><code>${r[0]}</code></td><td>${r[1]}</td></tr>`).join("")}</tbody></table><p>React, Svelte and Vue expose compound namespaces. Angular provides native directives. Astro and Vanilla bind existing HTML. <a href="/">Try the working examples.</a></p></section><section id="values"><h2>Values and interval endings</h2><p>A date picker exports {date}. A time picker exports {time}. A range exports {start, end}. Time endpoints can include an explicit date or a dayOffset. The picker never guesses the next day from the clock time.</p><pre>{
+  `<header class="site-nav"><a class="brand" href="/">salyra<span>/</span>ui</a><nav><a href="/">Examples</a><a href="/docs.html">Documentation</a></nav></header><div class="docs-layout"><aside class="docs-sidebar"><a href="#setup">Setup</a><a href="#composition">Composition</a><a href="#values">Values & ranges</a><a href="#customization">Customization</a><a href="#recipes">Recipes</a><a href="#parts">Part props</a><a href="#options">Options</a><a href="#methods">Store methods</a><a href="#ssr">SSR & time zones</a></aside><main class="docs-content"><p class="eyebrow">Development preview · <a href="/changelog.html">0.1.0</a></p><h1>Calendar &<br>date pickers.</h1><p>Calendar calculations, selection and time controls share one core. Choose a ready-made surface or compose the native controls in your own layout.</p><section id="setup"><h2>Setup</h2><div class="docs-callout">These four packages are local development previews. Build their archives with npm run build. They are not published on npm yet.</div><table><thead><tr><th>Package</th><th>Contains</th><th>Depends on</th><th>Download</th></tr></thead><tbody><tr><td><code>@salyra-ui/calendar</code></td><td>Calendar, shared store and native primitives</td><td>None</td><td><a href="/downloads/salyra-ui-calendar-0.1.0.tgz" download>Calendar archive</a></td></tr><tr><td><code>@salyra-ui/date-picker</code></td><td>Date selection and date ranges</td><td>Calendar</td><td><a href="/downloads/salyra-ui-date-picker-0.1.0.tgz" download>Date Picker archive</a></td></tr><tr><td><code>@salyra-ui/time-picker</code></td><td>Time controls and multi-day time ranges</td><td>Calendar</td><td><a href="/downloads/salyra-ui-time-picker-0.1.0.tgz" download>Time Picker archive</a></td></tr><tr><td><code>@salyra-ui/date-time-picker</code></td><td>DatePicker and TimePicker in one editor</td><td>Calendar, Date Picker, Time Picker</td><td><a href="/downloads/salyra-ui-date-time-picker-0.1.0.tgz" download>Date Time Picker archive</a></td></tr></tbody></table><p>Install the archives your editor needs together. This date-only example needs two.</p><pre>npm install ./salyra-ui-calendar-0.1.0.tgz ./salyra-ui-date-picker-0.1.0.tgz</pre><p>A date-time editor needs all four archives.</p><pre>npm install ./salyra-ui-calendar-0.1.0.tgz ./salyra-ui-date-picker-0.1.0.tgz ./salyra-ui-time-picker-0.1.0.tgz ./salyra-ui-date-time-picker-0.1.0.tgz</pre><p>Once published, install only the package you want. npm will resolve its declared dependencies. Each package has /react, /svelte, /vue, /angular, /astro and /vanilla entries. Its stylesheet is optional.</p></section><section id="composition"><h2>Compose an editor</h2><p>Import DatePicker from date-picker for days, TimePicker from time-picker for hours, or DateTimePicker from date-time-picker for both. Calendar can also navigate and render cells with selection turned off.</p><div class="code-example"><div class="code-toolbar"><div class="framework-tabs" role="tablist">${frameworks.map((f) => `<button role="tab" id="framework-${f.toLowerCase()}" aria-controls="source" data-framework="${f}" aria-selected="false">${f}</button>`).join("")}</div><button id="copy">Copy code</button></div><pre><code id="source" role="tabpanel" tabindex="0"></code></pre><p id="copy-status" role="status"></p></div><table><thead><tr><th>Part</th><th>Use</th></tr></thead><tbody>${parts.map((r) => `<tr><td><code>${r[0]}</code></td><td>${r[1]}</td></tr>`).join("")}</tbody></table><p>React, Svelte and Vue expose compound namespaces. Angular provides native directives. Astro and Vanilla bind existing HTML. <a href="/">Try the working examples.</a></p></section><section id="values"><h2>Values and interval endings</h2><p>A date picker exports {date}. A time picker exports {time}. A range exports {start, end}. Time endpoints can include an explicit date or a dayOffset. The picker never guesses the next day from the clock time.</p><pre>{
   "start": { "date": "2026-10-03", "time": "22:00" },
   "end": { "date": "2026-10-06", "time": "09:30" }
 }</pre><p>For an unanchored time interval, {time: "02:00", dayOffset: 3} ends three days after day zero. Give both endpoints dates when you need actual calendar dates. Mixing one dated endpoint with one undated endpoint is rejected.</p><p>Incomplete values remain in draft. A well-formed field edit can also stay in draft while it violates a constraint, so you can finish entering its other segments. The saved value stays valid. Apply validates both endpoints. Clear followed by Apply removes the saved value. Empty values are allowed unless the form binding requires a selection. Hover previews do not change the applied value.</p></section><section id="customization"><h2>Your content and controls</h2><p>Place a custom Number inside DayTrigger. Put event buttons beside the trigger inside Cell, so opening an event does not select the date. Move MonthSelect, YearSelect and Navigation outside the calendar grid.</p><pre>Calendar.Cell
   Calendar.DayTrigger
     Calendar.Number + your dot
-  your event buttons</pre><p>Weekday accepts custom content. weekStartsOn controls column order, while weekend controls the data-weekend state. Style cells using data-selected, data-in-range, data-range-start, data-range-end, data-outside and data-today.</p><p>bindCalendar accepts renderCell and renderWeekday for custom Vanilla and ready-made calendar content. These return trusted application markup. Use data-day-trigger and data-date on the day action. Selection states update through cell attributes without rebuilding event content on hover.</p></section><section id="recipes"><h2>Start with the part you need</h2><p>These stores work with every adapter. Pass store to a Root, or to mountPicker in Vanilla. Calendar, date, time and date-time use composition rather than component inheritance.</p><div class="recipe"><h3>Just a date</h3><button data-copy-code>Copy code</button><pre><code>const date = createPickerStore({
-  kind: 'date', selection: 'single',
+  your event buttons</pre><p>Weekday accepts custom content. weekStartsOn controls column order, while weekend controls the data-weekend state. Style cells using data-selected, data-in-range, data-range-start, data-range-end, data-outside and data-today.</p><p>bindCalendar accepts renderCell and renderWeekday for custom Vanilla and ready-made calendar content. These return trusted application markup. Use data-day-trigger and data-date on the day action. Selection states update through cell attributes without rebuilding event content on hover.</p></section><section id="recipes"><h2>Start with the part you need</h2><p>These stores work with every adapter. Pass store to a Root, or to mountPicker in Vanilla. The named createDatePickerStore, createTimePickerStore and createDateTimePickerStore helpers set the kind for you. Calendar, date, time and date-time use composition rather than component inheritance.</p><div class="recipe"><h3>Just a date</h3><button data-copy-code>Copy code</button><pre><code>import { createDatePickerStore } from '@salyra-ui/date-picker'
+
+const date = createDatePickerStore({
+  selection: 'single',
   referenceDate: '2026-10-03',
   onValueChange: value =&gt; saveDate(value)
 })
-// date.selectDate('2026-10-09') exports {date: '2026-10-09'}.</code></pre></div><div class="recipe"><h3>A time range with an explicit ending day</h3><button data-copy-code>Copy code</button><pre><code>const time = createPickerStore({
-  kind: 'time', selection: 'range', commit: 'explicit',
+// date.selectDate('2026-10-09') exports {date: '2026-10-09'}.</code></pre></div><div class="recipe"><h3>A time range with an explicit ending day</h3><button data-copy-code>Copy code</button><pre><code>import { createTimePickerStore } from '@salyra-ui/time-picker'
+
+const time = createTimePickerStore({
+  selection: 'range', commit: 'explicit',
   hourCycle: 12, seconds: true, minuteStep: 5,
   defaultValue: {
     start: {time: '22:00:00', dayOffset: 0},
@@ -327,7 +331,9 @@ document.querySelector("#app")!.innerHTML =
 })
 time.setDayOffset(4, 'end')
 time.apply()
-// Display a day-offset field, or supply dates on both endpoints.</code></pre></div><div class="recipe"><h3>Scrolling months</h3><button data-copy-code>Copy code</button><pre><code>// React. Svelte and Vue use the same Continuous options.
+// Display a day-offset field, or supply dates on both endpoints.</code></pre></div><div class="recipe"><h3>Scrolling months</h3><button data-copy-code>Copy code</button><pre><code>import { Calendar } from '@salyra-ui/calendar/react'
+
+// Svelte and Vue use the same Continuous options.
 &lt;Calendar.Root referenceDate="2026-10-03" selection="range"&gt;
   &lt;Calendar.Continuous className="sp-calendar"
     style={{height: 440, overflowY: 'auto', display: 'block'}}
@@ -385,7 +391,7 @@ function Month() {
 </tbody></table><p>Angular directives attach to existing elements, so native children, classes and event bindings stay under Angular's control. Astro components are imported individually from /astro/Component.astro. The JavaScript entry /astro exposes the same core and native bindings as /vanilla.</p></section><section id="options"><h2>Root options</h2><table><thead><tr><th>Key</th><th>Accepted values / default</th><th>Behavior</th></tr></thead><tbody>${rows.map((r) => `<tr><td><code>${r[0]}</code></td><td><code>${r[1]}</code><p>Default: ${r[2]}</p></td><td>${r[3]}</td></tr>`).join("")}</tbody></table></section><section id="methods"><h2>Store methods</h2><table><tbody>${[
     [
       "createPickerStore(options)",
-      "Create a store per editor or server request.",
+      "Create a store per editor or server request. Each picker package fixes its own kind, while the calendar entry accepts kind explicitly.",
     ],
     [
       "getSnapshot()",

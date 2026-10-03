@@ -4,11 +4,14 @@
     "noEmit": false,
     "declaration": true,
     "outDir": "artifacts/angular",
-    "rootDir": "src"
+    "rootDir": "packages/calendar/src"
   },
   "angularCompilerOptions": {
     "compilationMode": "partial",
     "strictTemplates": true
   },
-  "include": ["src/angular/**/*.ts", "src/core/**/*.ts"]
+  "include": [
+    "packages/calendar/src/angular/**/*.ts",
+    "packages/calendar/src/core/**/*.ts"
+  ]
 }

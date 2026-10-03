@@ -5,12 +5,12 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "artifacts/types",
-    "rootDir": "src"
+    "rootDir": "packages/calendar/src"
   },
   "include": [
-    "src/core/**/*.ts",
-    "src/react/**/*.tsx",
-    "src/vue/**/*.ts",
-    "src/vanilla/**/*.ts"
+    "packages/calendar/src/core/**/*.ts",
+    "packages/calendar/src/react/**/*.tsx",
+    "packages/calendar/src/vue/**/*.ts",
+    "packages/calendar/src/vanilla/**/*.ts"
   ]
 }

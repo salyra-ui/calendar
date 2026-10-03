@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { DatePicker as Picker } from "@salyra-ui/date-picker/svelte";
+  import { DateTimePicker } from "@salyra-ui/date-time-picker/svelte";
+
   import {
-    DatePicker as Picker,
-    DateTimePicker,
     Calendar,
     createPickerStore,
     type PickerValue,
-  } from "../src/svelte";
+  } from "@salyra-ui/calendar/svelte";
   const store = createPickerStore({
     selection: "range",
     referenceDate: "2026-10-03",

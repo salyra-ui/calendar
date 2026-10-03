@@ -11,17 +11,19 @@
     "noEmit": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node", "svelte"]
   },
   "include": [
-    "src/core/**/*.ts",
-    "src/react/**/*.tsx",
-    "src/vanilla/**/*.ts",
-    "src/angular/**/*.ts",
+    "packages/calendar/src/core/**/*.ts",
+    "packages/calendar/src/react/**/*.tsx",
+    "packages/calendar/src/vanilla/**/*.ts",
+    "packages/calendar/src/angular/**/*.ts",
     "examples/**/*.ts",
     "tests/**/*.ts",
     "scripts/**/*.ts",
-    "src/vue/**/*.ts",
-    "examples/**/*.tsx"
+    "packages/calendar/src/vue/**/*.ts",
+    "examples/**/*.tsx",
+    "packages/*/src/*.ts",
+    "packages/*/src/*.tsx"
   ]
 }

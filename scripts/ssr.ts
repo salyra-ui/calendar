@@ -8,24 +8,32 @@ import { createSSRApp, h } from "vue";
 import { renderToString as renderVue } from "@vue/server-renderer";
 import { compile } from "svelte/compiler";
 import { render } from "svelte/server";
-import { Calendar as ReactCalendar } from "../src/react";
-import { Calendar as VueCalendar } from "../src/vue";
+import { Calendar as ReactCalendar } from "../packages/calendar/src/react";
+import { Calendar as VueCalendar } from "../packages/calendar/src/vue";
 import { renderAngular } from "../tests/angular-ssr";
 const output = resolve("artifacts/ssr");
 await mkdir(output, { recursive: true });
-for (const file of await readdir("src/svelte"))
+for (const file of await readdir("packages/calendar/src/svelte"))
   if (file.endsWith(".svelte")) {
-    const source = await readFile(`src/svelte/${file}`, "utf8");
+    const source = await readFile(
+      `packages/calendar/src/svelte/${file}`,
+      "utf8",
+    );
     let js = compile(source, { generate: "server", filename: file }).js.code;
     js = js
       .replace(/(['"])(\.\/[^'"]+)\.svelte\1/g, "$1$2.mjs$1")
       .replace(
         /(['"])\.\.\/core\1/g,
-        JSON.stringify(pathToFileURL(resolve("src/core/index.ts")).href),
+        JSON.stringify(
+          pathToFileURL(resolve("packages/calendar/src/core/index.ts")).href,
+        ),
       )
       .replace(
         /(['"])\.\/context\1/g,
-        JSON.stringify(pathToFileURL(resolve("src/svelte/context.ts")).href),
+        JSON.stringify(
+          pathToFileURL(resolve("packages/calendar/src/svelte/context.ts"))
+            .href,
+        ),
       );
     await writeFile(`${output}/${file.replace(".svelte", ".mjs")}`, js);
   }

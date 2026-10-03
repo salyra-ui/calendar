@@ -1,6 +1,8 @@
 # Calendar and picker architecture
 
-One package keeps the selection rules consistent across six adapters. Each framework is a separate export. Importing the Svelte entry does not import React, Vue or Angular. Peers are optional. Calendar, DatePicker, TimePicker and DateTimePicker compose shared primitives rather than inherit framework components.
+Four npm packages live in one workspace. Calendar owns the shared engine, contexts and native primitives. DatePicker and TimePicker depend on Calendar and provide their specific roots, fields and default store kinds. DateTimePicker depends on all three and composes their parts. One imported framework uses one shared context and core instance. No picker package copies the engine into its ESM adapter.
+
+Each package has separate framework exports and optional peers. Vanilla standalone browser bundles include their dependencies because a script-tag consumer has no module resolver. The package build emits a separate audited archive and README for each package.
 
 ## Core
 

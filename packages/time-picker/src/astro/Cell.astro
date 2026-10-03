@@ -1,0 +1,8 @@
+---
+import Part from "@salyra-ui/calendar/astro/Cell.astro";
+const { options = {}, ...attributes } = Astro.props;
+---
+
+<Part {...attributes} options={{ ...options, kind: "time" }}>
+  <slot />
+</Part>
