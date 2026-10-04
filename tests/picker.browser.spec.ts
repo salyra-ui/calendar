@@ -326,17 +326,21 @@ test("documentation switches only its code block and keeps tables inside a mobil
       name.endsWith(".ts") ? "mountEndpointPickers" : ".endpoint-popup",
     );
   }
-  for (const name of [
-    "Calendar archive",
-    "Date Picker archive",
-    "Time Picker archive",
-    "Date Time Picker archive",
-  ]) {
-    const href = await page
-      .getByRole("link", { name, exact: true })
-      .getAttribute("href");
-    expect((await page.request.get(href!)).ok()).toBe(true);
+  const assets = page.locator("#vanilla-assets a[download]");
+  await expect(assets).toHaveCount(16);
+  for (const asset of await assets.all()) {
+    const href = await asset.getAttribute("href");
+    expect(href).toMatch(
+      /^\/downloads\/(calendar|date-picker|time-picker|date-time-picker)\/.+\.(js|css)$/,
+    );
+    const response = await page.request.get(href!);
+    expect(response.ok()).toBe(true);
+    expect(await response.text()).not.toContain("sourceMappingURL");
   }
+  await expect(page.locator("#setup")).toContainText(
+    "npm install @salyra-ui/date-picker",
+  );
+  await expect(page.locator("#setup")).not.toContainText(".tgz");
 });
 
 test("manual time segments preserve seconds when the ready-made seconds control is hidden", async ({

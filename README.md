@@ -4,6 +4,8 @@ Four separately installable npm packages in one development workspace. The curre
 
 [Salyra UI documentation](https://salyra-ui.github.io/docs/) covers Calendar, Date Picker, Time Picker and Date Time Picker alongside Color Picker and Theme Studio. Its source lives in the separate [documentation repository](https://github.com/salyra-ui/docs).
 
+[Source and issues](https://github.com/salyra-ui/calendar) · [Changelog](CHANGELOG.md)
+
 | Package                     | Purpose                                                | Dependencies                       |
 | --------------------------- | ------------------------------------------------------ | ---------------------------------- |
 | @salyra-ui/calendar         | Gregorian calendar, shared store and native primitives | None                               |

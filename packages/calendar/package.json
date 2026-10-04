@@ -51,5 +51,29 @@
     }
   },
   "private": true,
-  "homepage": "https://salyra-ui.github.io/docs/calendar.html"
+  "homepage": "https://salyra-ui.github.io/docs/calendar.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salyra-ui/calendar.git",
+    "directory": "packages/calendar"
+  },
+  "bugs": {
+    "url": "https://github.com/salyra-ui/calendar/issues"
+  },
+  "keywords": [
+    "salyra-ui",
+    "calendar",
+    "calendar",
+    "date-picker",
+    "time-picker",
+    "range",
+    "react",
+    "svelte",
+    "vue",
+    "angular",
+    "astro",
+    "vanilla",
+    "headless",
+    "tailwind"
+  ]
 }

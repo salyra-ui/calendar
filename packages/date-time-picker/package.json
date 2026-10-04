@@ -56,5 +56,29 @@
     "@salyra-ui/time-picker": "0.1.0"
   },
   "private": true,
-  "homepage": "https://salyra-ui.github.io/docs/date-time-picker.html"
+  "homepage": "https://salyra-ui.github.io/docs/date-time-picker.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salyra-ui/calendar.git",
+    "directory": "packages/date-time-picker"
+  },
+  "bugs": {
+    "url": "https://github.com/salyra-ui/calendar/issues"
+  },
+  "keywords": [
+    "salyra-ui",
+    "date-time-picker",
+    "calendar",
+    "date-picker",
+    "time-picker",
+    "range",
+    "react",
+    "svelte",
+    "vue",
+    "angular",
+    "astro",
+    "vanilla",
+    "headless",
+    "tailwind"
+  ]
 }

@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.1.0
+## 0.1.0 · 4 October 2026
+
+First release of Calendar, Date Picker, Time Picker and Date Time Picker. Each package has its own npm installation and framework entries.
 
 - Split Calendar, DatePicker, TimePicker and DateTimePicker into four npm packages with shared dependencies.
 - Added package-specific store factories, Vanilla mounts and framework entries.

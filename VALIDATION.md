@@ -1,6 +1,6 @@
 # Release validation
 
-Verified locally on 4 October 2026 with Node 24.19.0. The dependency install used npm 11.21.0. Checks cover the 0.1.0 build artifacts. npm publication is a separate release step.
+Release checks rerun locally on 4 October 2026 with Node 24.19.0 and npm 10.2.3. Checks cover the exact 0.1.0 build artifacts used for publication.
 
 ## Checks
 
@@ -35,7 +35,7 @@ The store retains at most 48 month grids. Continuous scrolling uses a bounded mo
 
 ## Remaining validation
 
-Keyboard behavior follows the [WAI-ARIA date picker example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/). Manual screen-reader and Safari/Firefox testing remain to be done. GitHub CI is configured but has not run on a remote repository yet.
+Keyboard behavior follows the [WAI-ARIA date picker example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/). Manual screen-reader and Safari/Firefox testing remain to be done. GitHub CI runs the same checks in the [Calendar repository](https://github.com/salyra-ui/calendar/actions).
 
 The development dependency audit reports one [http-cache-semantics advisory](https://github.com/advisories/GHSA-ch52-4w7c-c8xp), affecting that package and Astro. Installed http-cache-semantics 4.2.0 has no patched release available at this check. The calendar package has no runtime dependencies. The three picker packages depend only on the corresponding Salyra packages. None of these archives bundle Astro or this cache dependency. Avoid using the example tooling as a production server until the upstream issue is resolved.
 

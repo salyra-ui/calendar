@@ -1,4 +1,4 @@
-# Date Picker 0.1.0
+# Calendar and Pickers 0.1.0
 
 API reference for the Calendar, Date Picker, Time Picker and Date Time Picker packages. Install the package you need with npm and import its framework entry.
 
@@ -13,7 +13,7 @@ Calendar, DatePicker, TimePicker and DateTimePicker compose the same store. The 
 | @salyra-ui/time-picker      | calendar                           | createTimePickerStore(options)             |
 | @salyra-ui/date-time-picker | calendar, date-picker, time-picker | createDateTimePickerStore(options)         |
 
-All four have framework entries. Import the matching package, such as `@salyra-ui/time-picker/svelte`. npm will install declared package dependencies after publication. For a local archive install, pass the dependency archives to npm together. DateTimePicker uses the DatePicker and TimePicker parts in the same context.
+All four have framework entries. Import the matching package, such as `@salyra-ui/time-picker/svelte`. npm installs the declared package dependencies. DateTimePicker uses the DatePicker and TimePicker parts in the same context.
 
 The picker factories and Vanilla mountPicker fix their package's kind. A supplied store must match. Angular's native PickerRoot directive remains generic and requires kind in its options. React, Svelte, Vue and Astro roots choose their package's kind.
 
