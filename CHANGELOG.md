@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 · Development preview
+## 0.1.0
 
 - Split Calendar, DatePicker, TimePicker and DateTimePicker into four npm packages with shared dependencies.
 - Added package-specific store factories, Vanilla mounts and framework entries.
@@ -12,8 +12,6 @@
 
 - Added independent Preview/Code tabs, copy and file downloads to every working example.
 - Added individual standard/minified Vanilla JavaScript and CSS downloads and installation examples.
-
-This version is available as a local archive. It has not been published to npm.
 
 - Gregorian calendar calculations for years 1–9999, with configurable week starts and outside days.
 - Date, time and date-time selection, with single values or ranges.

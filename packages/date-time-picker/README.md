@@ -1,10 +1,10 @@
 # Salyra UI / DateTimePicker
 
-Composable datetime controls for React, Svelte, Vue, Angular, Astro and Vanilla. Development preview 0.1.0, not published yet.
+Composable datetime controls for React, Svelte, Vue, Angular, Astro and Vanilla.
 
 ## Installation
 
-For this local preview, install all four archives together. Once published, npm will install the declared Salyra dependencies automatically.
+Install with `npm install @salyra-ui/date-time-picker`. npm resolves its declared Salyra dependencies. Import the framework entry your application uses.
 
 ```sh
 npm install @salyra-ui/date-time-picker

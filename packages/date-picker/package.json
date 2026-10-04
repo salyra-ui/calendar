@@ -53,5 +53,6 @@
   "dependencies": {
     "@salyra-ui/calendar": "0.1.0"
   },
-  "private": true
+  "private": true,
+  "homepage": "https://salyra-ui.github.io/docs/date-picker.html"
 }

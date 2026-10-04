@@ -1,6 +1,6 @@
 # Salyra UI / Calendar and Pickers
 
-Four separately installable npm packages in one development workspace. Preview 0.1.0, not published yet.
+Four separately installable npm packages in one development workspace. The current API version is 0.1.0.
 
 [Salyra UI documentation](https://salyra-ui.github.io/docs/) covers Calendar, Date Picker, Time Picker and Date Time Picker alongside Color Picker and Theme Studio. Its source lives in the separate [documentation repository](https://github.com/salyra-ui/docs).
 
@@ -23,15 +23,15 @@ Each working example has independent Preview and Code tabs. Code shows the actua
 
 The current toolchain verifies React 18, Svelte 5, Vue 3.5, Angular 20 and Astro 7. See [VALIDATION.md](VALIDATION.md) for coverage and remaining validation.
 
-## Local archive installation
+## Installation
 
-`npm run build` writes one archive per package under `release/<package>/`. Install the required dependency archives together before publication. For dates:
+Install the component you need. npm resolves the shared dependencies.
 
 ```sh
-npm install ./release/calendar/salyra-ui-calendar-0.1.0.tgz ./release/date-picker/salyra-ui-date-picker-0.1.0.tgz
+npm install @salyra-ui/date-picker
 ```
 
-For date-time, add the time-picker and date-time-picker archives to the same command. After publication, `npm install @salyra-ui/date-time-picker` will resolve these dependencies automatically.
+Use `@salyra-ui/calendar` for custom calendars, `@salyra-ui/time-picker` for time controls or `@salyra-ui/date-time-picker` for both dates and times.
 
 ```js
 import { DatePicker } from "@salyra-ui/date-picker/react";

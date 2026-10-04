@@ -55,5 +55,6 @@
     "@salyra-ui/date-picker": "0.1.0",
     "@salyra-ui/time-picker": "0.1.0"
   },
-  "private": true
+  "private": true,
+  "homepage": "https://salyra-ui.github.io/docs/date-time-picker.html"
 }

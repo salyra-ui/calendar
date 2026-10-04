@@ -1,6 +1,6 @@
 # Date Picker 0.1.0
 
-Development preview. This reference describes the local archive, not an npm release.
+API reference for the Calendar, Date Picker, Time Picker and Date Time Picker packages. Install the package you need with npm and import its framework entry.
 
 Calendar, DatePicker, TimePicker and DateTimePicker compose the same store. The core contains no framework dependency. SSR requires an instance per request and matching referenceDate, locale, timeZone and value on the client. Dates use Gregorian years 1–9999.
 

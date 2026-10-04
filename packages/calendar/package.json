@@ -50,5 +50,6 @@
       "optional": true
     }
   },
-  "private": true
+  "private": true,
+  "homepage": "https://salyra-ui.github.io/docs/calendar.html"
 }
